@@ -1,8 +1,8 @@
 {
-  "name": "supermarket-api",
+  "name": "graduation-api",
   "version": "1.0.0",
   "private": true,
-  "description": "Supermarket API",
+  "description": "Graduation API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,20 +11,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bambil/supermarket-api.git"
+    "url": "git+https://github.com/ceit93/graduation-api.git"
   },
   "author": "Iman Tabrizian <tabrizian@outlook.com>",
   "bugs": {
-    "url": "https://github.com/bambil/supermarket-api/issues"
+    "url": "https://github.com/bambil/graduation-api/issues"
   },
-  "homepage": "https://github.com/bambil/supermarket-api#readme",
+  "homepage": "https://github.com/bambil/graduation-api#readme",
   "dependencies": {
     "@bakjs/auth": "^0.1.7",
-    "@bakjs/minio": "^0.1.2",
     "@bakjs/mongo": "^0.2.0",
     "bak": "^1.1.4",
-    "scooter": "^4.0.0",
-    "uuid": "^3.1.0"
+    "scooter": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
