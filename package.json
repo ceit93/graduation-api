@@ -1,0 +1,32 @@
+{
+  "name": "supermarket-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Supermarket API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec yarn start",
+    "start": "bak start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bambil/supermarket-api.git"
+  },
+  "author": "Iman Tabrizian <tabrizian@outlook.com>",
+  "bugs": {
+    "url": "https://github.com/bambil/supermarket-api/issues"
+  },
+  "homepage": "https://github.com/bambil/supermarket-api#readme",
+  "dependencies": {
+    "@bakjs/auth": "^0.1.7",
+    "@bakjs/minio": "^0.1.2",
+    "@bakjs/mongo": "^0.2.0",
+    "bak": "^1.1.4",
+    "scooter": "^4.0.0",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
