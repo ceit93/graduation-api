@@ -15,16 +15,13 @@
   },
   "author": "Iman Tabrizian <tabrizian@outlook.com>",
   "bugs": {
-    "url": "https://github.com/bambil/graduation-api/issues"
+    "url": "https://github.com/ceit93/graduation-api/issues"
   },
-  "homepage": "https://github.com/bambil/graduation-api#readme",
+  "homepage": "https://github.com/ceit93/graduation-api#readme",
   "dependencies": {
-    "@bakjs/auth": "^0.1.7",
-    "@bakjs/mongo": "^0.2.0",
-    "bak": "^1.1.4",
-    "scooter": "^4.0.0"
+    "bak": "^4.0.1"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.17.2"
   }
 }
