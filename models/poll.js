@@ -6,7 +6,7 @@ class Poll extends Model {
       subject: String,
       model: {type:Schema.Types.ObjectId, ref: 'User'},
       selectables: [String],
-      votes: [{user: {type:Schema.Types.ObjectId, ref: 'User'}, choices: []}],
+      votes: [{user: {type:Schema.Types.ObjectId, ref: 'User'}, choices: [int]}],
     }
   }
 }
