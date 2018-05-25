@@ -12,6 +12,7 @@ class PostsController extends Controller {
   }
 
   async showAllPosts (request, h) {
+    let posts
     try {
       posts = await Post.find()
       return posts
