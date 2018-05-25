@@ -9,7 +9,8 @@ module.exports = {
     }
   },
   auth: {
-    secret: 'default'
+    secret: 'secret',
+    user_model: require('../models/user')
   },
 
   minio: {
