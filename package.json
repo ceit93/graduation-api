@@ -20,7 +20,7 @@
   "homepage": "https://github.com/ceit93/graduation-api#readme",
   "dependencies": {
     "@bakjs/audit": "^3.0.0",
-    "@bakjs/auth": "^3.1.0",
+    "@bakjs/auth": "^3.1.1",
     "@bakjs/mongo": "^3.1.0",
     "bak": "^4.0.1",
     "config": "^1.30.0"
