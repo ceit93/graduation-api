@@ -15,7 +15,7 @@ class PostsController extends Controller {
     let posts
     try {
       posts = await Post.find()
-      return posts
+      return { posts }
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
