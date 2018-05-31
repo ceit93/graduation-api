@@ -1,6 +1,7 @@
 const { Controller } = require('bak')
 const { Poll } = require('../models')
 const { User } = require('../models')
+const { Vote } = require('../models')
 const { Qualification } = require('../models')
 const Boom = require('boom')
 
@@ -42,11 +43,22 @@ class PollsController extends Controller {
   }
 
   async submitPoll (request, h) {
-    let poll
+    let polls
+    let votes
     try {
-      poll = new Poll(request.payload)
-      await poll.save()
-      return poll
+
+      let vote = new Vote()
+      vote.voter = request.payload.voter
+      vote.candidate = request.payload.candidate
+      await vote.save()
+
+      polls = await Poll.find({subject:request.payload.subject})
+      for(let poll of polls){
+        poll.votes.push(vote)
+        poll.save()
+      }
+
+      return polls
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
