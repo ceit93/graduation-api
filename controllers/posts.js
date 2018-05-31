@@ -103,10 +103,15 @@ class PostsController extends Controller {
     let post = request.params.post
 
     try {
+      let toBeUpdatedPost = await Post.findById(post)
       post = await Post.findById(post)
-      post.set(request.payload)
-      await post.save()
-      return { updated: true }
+      if (request.user._id.equals(post.user)) {
+        post.set(request.payload)
+        await post.save()
+        return { updated: true }
+      } else {
+        return Boom.unauthorized()
+      }
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
@@ -118,8 +123,22 @@ class PostsController extends Controller {
     let post = request.params.post
 
     try {
-      post = await Post.findByIdAndRemove(post)
-      return { deleted: true }
+      let toBeDeletedPost = await Post.findById(post)
+      if (request.user._id.equals(toBeDeletedPost.user)) {
+        let user = await User.findOne({posts: post})
+        for (let post in user.posts) {
+          if (user.posts[post].equals(toBeDeletedPost._id)) {
+            user.posts.slice(post, 1)
+            break
+          }
+        }
+        await user.save()
+        post = await Post.findByIdAndRemove(post)
+        return { deleted: true }
+      } else {
+        return Boom.unauthorized()
+      }
+
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
