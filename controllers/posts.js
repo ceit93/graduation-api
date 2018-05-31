@@ -1,10 +1,12 @@
 const { Controller } = require('bak')
-const { Post } = require('../models')
+const { Post, User } = require('../models')
 const Boom = require('boom')
 
 class PostsController extends Controller {
   init () {
     this.get('/posts', this.showAllPosts)
+    this.get('/posts/wall', this.showAllWall)
+    this.post('/posts/wall/{user}', this.createPostWall)
     this.get('/posts/{post}', this.showPost)
     this.post('/posts/{post}', this.updatePost)
     this.post('/posts', this.createPost)
@@ -12,9 +14,34 @@ class PostsController extends Controller {
   }
 
   async showAllPosts (request, h) {
-    let posts
     try {
-      posts = await Post.find()
+      let user = await User.findById(request.user._id).populate('posts')
+      let posts = []
+      for (let post of user.posts) {
+        if (post.user.equals(request.user._id)) {
+          posts.push(post)
+        }
+      }
+
+
+      return { posts }
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
+
+  async showAllWall(request, h) {
+    try {
+      let user = await User.findById(request.user._id).populate('posts')
+      let posts = []
+      for (let post of user.posts) {
+        if (!post.user.equals(request.user._id)) {
+          posts.push(post)
+        }
+      }
+
+
       return { posts }
     } catch (e) {
       console.log(e)
@@ -43,7 +70,11 @@ class PostsController extends Controller {
 
     try {
       post = new Post(request.payload)
+      post.user = request.user._id
       await post.save()
+      let user = await User.findById(request.user._id)
+      user.posts.push(post)
+      await user.save()
       return post
     } catch (e) {
       console.log(e)
@@ -52,14 +83,34 @@ class PostsController extends Controller {
 
   }
 
+  async createPostWall (request, h) {
+    let post
+    try {
+      post = new Post(request.payload)
+      post.user = request.user._id
+      await post.save()
+      let user = await User.findById(request.params.user)
+      user.posts.push(post)
+      await user.save()
+      return post
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
+
   async updatePost (request, h) {
     let post = request.params.post
 
     try {
-      post = await Post.findById(post)
-      post.set(request.payload)
-      await post.save()
-      return { updated: true }
+      let toBeUpdatedPost = await Post.findById(post)
+      if (request.user._id.equals(toBeUpdatedPost.user)) {
+        post.set(request.payload)
+        await post.save()
+        return { updated: true }
+      } else {
+        return Boom.unauthorized()
+      }
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
@@ -71,8 +122,22 @@ class PostsController extends Controller {
     let post = request.params.post
 
     try {
-      post = await Post.findByIdAndRemove(post)
-      return { deleted: true }
+      let toBeDeletedPost = await Post.findById(post)
+      if (request.user._id.equals(toBeDeletedPost.user)) {
+        let user = await User.findOne({posts: post})
+        for (let post in user.posts) {
+          if (user.posts[post].equals(toBeDeletedPost._id)) {
+            user.posts.slice(post, 1)
+            break
+          }
+        }
+        await user.save()
+        post = await Post.findByIdAndRemove(post)
+        return { deleted: true }
+      } else {
+        return Boom.unauthorized()
+      }
+
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
