@@ -104,8 +104,7 @@ class PostsController extends Controller {
 
     try {
       let toBeUpdatedPost = await Post.findById(post)
-      post = await Post.findById(post)
-      if (request.user._id.equals(post.user)) {
+      if (request.user._id.equals(toBeUpdatedPost.user)) {
         post.set(request.payload)
         await post.save()
         return { updated: true }
