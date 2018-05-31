@@ -4,7 +4,7 @@ const Boom = require('boom')
 
 class QualificationsController extends Controller {
   init() {
-    this.post('/qualifications/submit', this.createQualification)
+    this.post('/qualification/create', this.createQualification)
     this.get('/qualifications', this.showAllQualifications)
   }
 
@@ -20,11 +20,22 @@ class QualificationsController extends Controller {
   }
 
   async createQualification (request, h) {
-    let qual
-    try {
-      qual = new Qualification(request.payload)
-      await qual.save()
-      return qual
+    let subject = request.payload.subject
+    try{
+      let qualifications = await Qualification.find()
+      let isNewTarin = true
+      for(let qual of qualifications){
+        if(qual.title === subject){
+          isNewTarin = false
+        }
+      }
+      if(isNewTarin){
+        let newQualification = new Qualification()
+        newQualification.title = subject
+        newQualification.approved = false
+        await newQualification.save()
+      }
+      return qualifications
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
