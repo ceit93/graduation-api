@@ -2,8 +2,13 @@ module.exports = {
 
   auth: {
     secret: 'AUTH_SECRET',
-    client: {
-      client_secret: 'AUTH_CLIENT_SECRET'
+    oauth: {
+      aut: {
+        url: 'AUTH_OAUTH_AUT_URL',
+        redirect_uri: ' AUTH_OAUTH_AUT_REDIRECT_URL',
+        client_id: 'AUTH_OAUTH_AUT_CLIENT_ID',
+        client_secret: 'AUTH_OAUTH_AUTH_CLIENT_SECRET'
+      }
     }
   },
 
