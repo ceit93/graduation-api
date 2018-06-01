@@ -13,10 +13,16 @@ module.exports = {
     user_model: require('../models/user'),
     oauth: {
       aut: {
-        url: 'AUTH_OAUTH_AUT_URL',
-        redirect_uri: ' AUTH_OAUTH_AUT_REDIRECT_URL',
+        url: 'https://account.aut.ac.ir/api/oauth',
+        redirect_uri: 'https://ceit93.ml',
         client_id: 'AUTH_OAUTH_AUT_CLIENT_ID',
-        client_secret: 'AUTH_OAUTH_AUTH_CLIENT_SECRET'
+        client_secret: 'AUTH_OAUTH_AUT_CLIENT_SECRET'
+      },
+      google: {
+        url: 'AUTH_OAUTH_GOOGLE_URL',
+        redirect_uri: ' AUTH_OAUTH_GOOGLE_REDIRECT_URL',
+        client_id: 'AUTH_OAUTH_GOOGLE_CLIENT_ID',
+        client_secret: 'AUTH_OAUTH_GOOGLE_CLIENT_SECRET'
       }
     }
   },
