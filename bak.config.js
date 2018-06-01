@@ -5,7 +5,8 @@ module.exports = {
   routes: [
     './controllers/posts',
     './controllers/polls',
-    './controllers/qualifications'
+    './controllers/qualifications',
+    './controllers/users'
   ],
   registrations: [
     '@bakjs/mongo',
