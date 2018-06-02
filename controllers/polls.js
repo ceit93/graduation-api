@@ -1,5 +1,5 @@
 const { Controller } = require('bak')
-const { Poll } = require('../models')
+const { Vote } = require('../models')
 const { User } = require('../models')
 const { Qualification } = require('../models')
 const Boom = require('boom')
@@ -18,20 +18,25 @@ class PollsController extends Controller {
 
     try {
 
-      for(let vote of votes){
+      for(let v of votes){
         let qualObjectId, candidateObjectId
-        let user = await User.findOne({username:vote.username})
+        let user = await User.findOne({username:v.username})
         if(user){
           candidateObjectId = user._id
         }
-        let qualification = await Qualification.findOne({title:vote.title})
+        let qualification = await Qualification.findOne({title:v.title})
         if(qualification){
           qualObjectId = qualification._id
         }
-        let voteResult = {}
-        voteResult.candidate = candidateObjectId
-        voteResult.tarin = qualObjectId
-        votesResults.push(voteResult)
+        // let voteResult = {}
+        // voteResult.candidate = candidateObjectId
+        // voteResult.qualification = qualObjectId
+        // votesResults.push(voteResult)
+        let vote = new Vote()
+        vote.candidate = candidateObjectId
+        vote.qualification = qualObjectId
+        await vote.save()
+        votesResults.push(vote)
       }
 
       user.votes = votesResults
@@ -46,17 +51,17 @@ class PollsController extends Controller {
 
   async getSavedPollsByUser (request, h) {
 
-    // let username = request.params.username
-    // let voterObjectID
     let voteResults = []
-    // let polls
+
     try {
+
       let user = await User.findById(request.user._id).populate('votes')
+
       for(let vote of user.votes){
         let voteResult = {}
-        // let voteQualification = await Qualification.findById(vote.tarin)
-        // voteResult.title = voteQualification.title
-        console.log(vote.tarin)
+        let voteQualification = await Qualification.findById(vote.qualification)
+        voteResult.title = voteQualification.title
+
         let voteCandidate = await User.findById(vote.candidate)
         voteResult.username = voteCandidate.username
 

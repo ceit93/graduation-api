@@ -4,8 +4,8 @@ module.exports = {
   prefix: '/api',
   routes: [
     './controllers/posts',
-    './controllers/polls',
     './controllers/qualifications',
+    './controllers/polls',
     './controllers/users'
   ],
   registrations: [

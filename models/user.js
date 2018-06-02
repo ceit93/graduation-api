@@ -11,9 +11,10 @@ class User extends Auth.User {
   static get $schema () {
     return Object.assign({}, Auth.User.$schema, {
       posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-      votes: [ {candidate: { type: Schema.Types.ObjectId, ref: 'User'}},
-        {tarin: { type: Schema.Types.ObjectId, ref: 'Qualification'}}
-      ]
+      // votes: [ {candidate: { type: Schema.Types.ObjectId, ref: 'User'}},
+      //   {tarin: { type: Schema.Types.ObjectId, ref: 'Qualification'}}
+      // ]
+      votes: [{type:Schema.Types.ObjectId, ref: 'Vote'}]
     })
   }
 }
