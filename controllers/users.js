@@ -12,7 +12,7 @@ class UsersController extends Controller {
     try{
       let users = await User.find()
       for(let user of users){
-        if(user.username.match('93[0-9]{5}$')){
+        if(user.username.match('^9331[0-9]{3}$')){
           let result = {}
           result.username = user.username
           result.name = user.name
