@@ -11,7 +11,7 @@ class QualificationsController extends Controller {
   async showAllQualifications (request, h) {
     let quals
     try {
-      quals = await Qualification.find()
+      quals = await Qualification.find({approved: true})
       return { quals }
     } catch (e) {
       console.log(e)
@@ -33,7 +33,7 @@ class QualificationsController extends Controller {
       if(isNewTarin){
         let newQualification = new Qualification()
         newQualification.title = subject
-        newQualification.approved = true
+        newQualification.approved = false
         await newQualification.save()
       }
       return qualifications

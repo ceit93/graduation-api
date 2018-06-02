@@ -8,6 +8,7 @@ class PollsController extends Controller {
   init (){
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
+    this.get('/polls/{username}', this.getVotesForUser)
   }
 
 
@@ -28,10 +29,7 @@ class PollsController extends Controller {
         if(qualification){
           qualObjectId = qualification._id
         }
-        // let voteResult = {}
-        // voteResult.candidate = candidateObjectId
-        // voteResult.qualification = qualObjectId
-        // votesResults.push(voteResult)
+
         let vote = new Vote()
         vote.candidate = candidateObjectId
         vote.qualification = qualObjectId
@@ -43,6 +41,31 @@ class PollsController extends Controller {
       user.save()
 
       return votesResults
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
+
+  async getVotesForUser (request, h) {
+
+    let voteResults = []
+
+    try {
+      let user = await User.findOne({username:request.params.username})
+      let allVotes = await Vote.find().populate('candidate')
+      for(let vote of allVotes){
+        if(vote.candidate.username === request.params.username){
+          let tarin = await Qualification.findById(vote.qualification)
+          voteResults.push(tarin.title)
+        }
+        // console.log(vote.candidate.username)
+      }
+
+
+
+      return voteResults
+
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
