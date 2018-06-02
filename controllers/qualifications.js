@@ -21,7 +21,6 @@ class QualificationsController extends Controller {
 
   async createQualification (request, h) {
     let subject = request.payload.subject
-    console.log(subject)
     try{
       let qualifications = await Qualification.find()
       let isNewTarin = true
