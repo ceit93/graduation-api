@@ -7,7 +7,7 @@ module.exports = {
         url: 'AUTH_OAUTH_AUT_URL',
         redirect_uri: ' AUTH_OAUTH_AUT_REDIRECT_URL',
         client_id: 'AUTH_OAUTH_AUT_CLIENT_ID',
-        client_secret: 'AUTH_OAUTH_AUTH_CLIENT_SECRET'
+        client_secret: 'AUTH_OAUTH_AUT_CLIENT_SECRET'
       },
       google: {
         url: 'AUTH_OAUTH_GOOGLE_URL',
