@@ -6,11 +6,11 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@bakjs/audit/-/audit-3.0.0.tgz#c1f59597640bd5291660e5c250daa7a6e3b6a02d"
 
-"@bakjs/auth@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@bakjs/auth/-/auth-3.1.0.tgz#d856cd18dc1e9ddd908522bce7a62ca06b1ea008"
+"@bakjs/auth@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@bakjs/auth/-/auth-3.1.1.tgz#576da87e3010a2ee867c7041d8e74d6c23234bba"
   dependencies:
-    axios "^0.17.1"
+    axios "^0.18.0"
     bcryptjs "^2.4.3"
     boom "^7.1.1"
     hoek "^5.0.2"
@@ -172,11 +172,11 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
-axios@^0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.17.1.tgz#2d8e3e5d0bdbd7327f91bc814f5c57660f81824d"
+axios@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
   dependencies:
-    follow-redirects "^1.2.5"
+    follow-redirects "^1.3.0"
     is-buffer "^1.1.5"
 
 b64@4.x.x:
@@ -728,9 +728,9 @@ fill-range@^4.0.0:
     repeat-string "^1.6.1"
     to-regex-range "^2.1.0"
 
-follow-redirects@^1.2.5:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.4.1.tgz#d8120f4518190f55aac65bb6fc7b85fcd666d6aa"
+follow-redirects@^1.3.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.0.tgz#234f49cf770b7f35b40e790f636ceba0c3a0ab77"
   dependencies:
     debug "^3.1.0"
 

@@ -3,6 +3,7 @@ const Config = require('config')
 module.exports = {
   prefix: '/api',
   routes: [
+    './controllers/posts'
   ],
   registrations: [
     '@bakjs/mongo',
