@@ -13,7 +13,6 @@ class UsersController extends Controller {
       let users = await User.find()
       for(let user of users){
         if(user.username.match('93[0-9]{5}$')){
-          console.log(user.username)
           let result = {}
           result.username = user.username
           result.name = user.name
