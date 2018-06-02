@@ -1,5 +1,5 @@
 const { Controller } = require('bak')
-const { Vote } = require('../models')
+const { Poll } = require('../models')
 const { User } = require('../models')
 const { Qualification } = require('../models')
 const Boom = require('boom')
@@ -19,13 +19,13 @@ class PollsController extends Controller {
 
     try {
 
-      for(let v of votes){
+      for(let vote of votes){
         let qualObjectId, candidateObjectId
-        let user = await User.findOne({username:v.username})
+        let user = await User.findOne({username:vote.username})
         if(user){
           candidateObjectId = user._id
         }
-        let qualification = await Qualification.findOne({title:v.title})
+        let qualification = await Qualification.findOne({title:vote.title})
         if(qualification){
           qualObjectId = qualification._id
         }
@@ -77,9 +77,7 @@ class PollsController extends Controller {
     let voteResults = []
 
     try {
-
       let user = await User.findById(request.user._id).populate('votes')
-
       for(let vote of user.votes){
         let voteResult = {}
         let voteQualification = await Qualification.findById(vote.qualification)
