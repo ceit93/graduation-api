@@ -14,7 +14,7 @@ module.exports = {
     oauth: {
       aut: {
         url: 'https://account.aut.ac.ir/api/oauth',
-        redirect_uri: 'https://ceit93.ml',
+        redirect_uri: 'https://ceit93.ir',
         client_id: 'AUTH_OAUTH_AUT_CLIENT_ID',
         client_secret: 'AUTH_OAUTH_AUT_CLIENT_SECRET'
       },
