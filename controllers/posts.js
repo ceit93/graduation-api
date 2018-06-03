@@ -69,8 +69,9 @@ class PostsController extends Controller {
     let post
 
     try {
-      post = new Post(request.payload)
+      post = new Post(request.payload.data)
       post.user = request.user._id
+      post.approved = false
       await post.save()
       let user = await User.findById(request.user._id)
       user.posts.push(post)
@@ -88,6 +89,7 @@ class PostsController extends Controller {
     try {
       post = new Post(request.payload)
       post.user = request.user._id
+      post.approved = false
       await post.save()
       let user = await User.findById(request.params.user)
       user.posts.push(post)
