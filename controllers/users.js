@@ -12,12 +12,18 @@ class UsersController extends Controller {
     let results = []
     try{
       let users = await User.find()
+
       for(let user of users){
-        if(user.username.match('^9331[0-9]{3}$')){
-          let result = {}
-          result.username = user.username
-          result.name = user.name
-          results.push(result)
+        let student_numbers = user.toObject().std_numbers
+        if(student_numbers) {
+          for (let number of student_numbers) {
+            if (number.match('^9331[0-9]{3}$')) {
+              let result = {}
+              result.std_numbers = number
+              result.name = user.name
+              results.push(result)
+            }
+          }
         }
       }
 
@@ -27,6 +33,7 @@ class UsersController extends Controller {
       throw Boom.badRequest()
     }
   }
+
 
   async getByUsername (request, h) {
     let user = await User.findOne({ username: request.params.username }).populate('posts')
