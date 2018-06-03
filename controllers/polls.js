@@ -14,33 +14,39 @@ class PollsController extends Controller {
 
   async submitPolls (request, h) {
     let user = request.user
-    let votes = request.payload.votes
+    let votes = request.payload.data.votes
+    console.log(request.payload.data)
     let votesResults = []
 
     try {
 
-      for(let v of votes){
+      for(let vote of votes){
         let qualObjectId, candidateObjectId
-        let user = await User.findOne({username:v.username})
+        let studentNumber = vote.toObject().std_numbers[0]
+        // console.log(vote._id)
+        let user = await User.findOne({std_numbers:studentNumber})
         if(user){
-          candidateObjectId = user._id
+          candidateObjectId = user.name
         }
-        let qualification = await Qualification.findOne({title:v.title})
+        let qualification = await Qualification.findOne({title:vote.title})
         if(qualification){
           qualObjectId = qualification._id
         }
-
-        let vote = new Vote()
-        vote.candidate = candidateObjectId
-        vote.qualification = qualObjectId
-        await vote.save()
-        votesResults.push(vote)
+        //
+        // console.log(candidateObjectId)
+        // console.log(qualObjectId)
+        //
+        // let vote = new Vote()
+        // vote.candidate = candidateObjectId
+        // vote.qualification = qualObjectId
+        // await vote.save()
+        // votesResults.push(vote)
       }
 
       user.votes = votesResults
       user.save()
 
-      return votesResults
+      return votes
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
