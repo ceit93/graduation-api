@@ -99,7 +99,7 @@ class PostsController extends Controller {
     delete request.payload.image
 
     try {
-      post = new Post(request.payload.data)
+      post = new Post(request.payload)
       if (image instanceof Buffer) {
         image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
         image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
