@@ -107,8 +107,8 @@ class PostsController extends Controller {
       }
       post.user = request.user._id
       post.approved = false
-      await post.save()
       post.image = image
+      await post.save()
       let user = await User.findById(request.params.user)
       user.posts.push(post)
       await user.save()
