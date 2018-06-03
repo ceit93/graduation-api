@@ -21,6 +21,7 @@ class UsersController extends Controller {
               let result = {}
               result.std_numbers = number
               result.name = user.name
+              result.objectID = user._id
               results.push(result)
             }
           }
