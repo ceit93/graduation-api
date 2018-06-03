@@ -5,7 +5,6 @@ module.exports = {
   routes: [
     './controllers/posts',
     './controllers/qualifications',
-    './controllers/notifications',
     './controllers/polls',
     './controllers/users',
     './controllers/notifications'
