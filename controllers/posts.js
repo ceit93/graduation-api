@@ -87,7 +87,7 @@ class PostsController extends Controller {
   async createPostWall (request, h) {
     let post
     try {
-      post = new Post(request.payload)
+      post = new Post(request.payload.data)
       post.user = request.user._id
       post.approved = false
       await post.save()
