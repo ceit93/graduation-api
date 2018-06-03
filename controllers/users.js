@@ -22,6 +22,8 @@ class UsersController extends Controller {
               result.objectID = user._id
               result.std_numbers = number
               result.name = user.name
+              result.username = user.username
+              result.objectID = user._id
               results.push(result)
             }
           }
@@ -44,14 +46,14 @@ class UsersController extends Controller {
 
     if (user._id.equals(request.user._id)) {
       for (let post in user.posts) {
-        let author = await User.findById(user.posts[post].user).select('_id username std_numbers')
+        let author = await User.findById(user.posts[post].user).select('_id name username std_numbers')
         user.posts[post].user = author.toObject()
         toBeDisplayedPosts.push(user.posts[post])
       }
     } else {
       for (let post in user.posts) {
         if (user.posts[post].user.equals(request.user._id) || user.posts[post].approved) {
-          let author = await User.findById(user.posts[post].user).select('_id username std_numbers')
+          let author = await User.findById(user.posts[post].user).select('_id name username std_numbers')
           user.posts[post].user = author.toObject()
           toBeDisplayedPosts.push(user.posts[post])
         }
