@@ -27,10 +27,32 @@ class UsersController extends Controller {
       throw Boom.badRequest()
     }
   }
-  async getByUsername (request, h) {
 
-    let user = await User.findOne({username: request.params.username})
+  async getByUsername (request, h) {
+    let user = await User.findOne({ username: request.params.username }).populate('posts')
     user.votes = undefined
+    user = user.toObject()
+    let toBeDisplayedPosts = []
+
+    if (user._id.equals(request.user._id)) {
+      for (let post in user.posts) {
+        let author = await User.findById(user.posts[post].user).select('_id username std_numbers')
+        user.posts[post].user = author.toObject()
+        toBeDisplayedPosts.push(user.posts[post])
+      }
+    } else {
+      for (let post in user.posts) {
+        if (user.posts[post].user.equals(request.user._id) || user.posts[post].approved) {
+          let author = await User.findById(user.posts[post].user).select('_id username std_numbers')
+          user.posts[post].user = author.toObject()
+          toBeDisplayedPosts.push(user.posts[post])
+        }
+      }
+    }
+
+    user.posts = undefined
+    user.posts = toBeDisplayedPosts
+
     return { user }
   }
 }
