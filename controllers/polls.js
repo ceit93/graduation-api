@@ -8,7 +8,7 @@ class PollsController extends Controller {
   init (){
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
-    this.get('/polls/{username}', this.getVotesForUser)
+    // this.get('/polls/{username}', this.getVotesForUser)
   }
 
 
