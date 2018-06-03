@@ -102,8 +102,8 @@ class PostsController extends Controller {
     try {
       post = new Post(request.payload)
       if (image instanceof Buffer) {
-        image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
-        image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
+        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', post.img, 'image/jpeg')
       }
       post.user = request.user._id
       post.approved = false
