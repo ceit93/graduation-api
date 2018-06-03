@@ -6,8 +6,8 @@ class Notification extends Model {
       title: String,
       message: String,
       type: String,
-      timeout: int,
-      approved: boolean
+      timeout: Number,
+      approved: Boolean
     }
   }
 }
