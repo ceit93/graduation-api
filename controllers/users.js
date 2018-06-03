@@ -19,6 +19,7 @@ class UsersController extends Controller {
           for (let number of student_numbers) {
             if (number.match('^9331[0-9]{3}$')) {
               let result = {}
+              result.objectID = user._id
               result.std_numbers = number
               result.name = user.name
               results.push(result)
