@@ -21,6 +21,7 @@
   "dependencies": {
     "@bakjs/audit": "^3.0.0",
     "@bakjs/auth": "^3.1.1",
+    "@bakjs/minio": "^4.0.0",
     "@bakjs/mongo": "^3.1.0",
     "bak": "^4.0.1",
     "config": "^1.30.0"
