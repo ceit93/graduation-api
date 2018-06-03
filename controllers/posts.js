@@ -75,7 +75,7 @@ class PostsController extends Controller {
       console.log(request.payload)
       post = new Post(request.payload)
       post.user = request.user._id
-      post.approved = false
+      post.approved = true
       await post.save()
       if (image instanceof Buffer) {
         image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
