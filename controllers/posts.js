@@ -101,8 +101,8 @@ class PostsController extends Controller {
     try {
       post = new Post(request.payload.data)
       if (image instanceof Buffer) {
-        image = await upload('p2l', item._id + '.jpg', image, 'image/jpeg')
-        image = url('p2l', item._id + '.jpg', item.img, 'image/jpeg')
+        image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
       }
       post.user = request.user._id
       post.approved = false
@@ -126,8 +126,8 @@ class PostsController extends Controller {
       if (request.user._id.equals(toBeUpdatedPost.user)) {
         toBeUpdatedPost.set(request.payload.data)
         if (request.payload.image instanceof Buffer) {
-          toBeUpdatedPost.image = await upload('p2l', item._id + '.jpg', image, 'image/jpeg')
-          toBeUpdatedPost.image = url('p2l', item._id + '.jpg', item.img, 'image/jpeg')
+          toBeUpdatedPost.image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
+          toBeUpdatedPost.image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
         }
         await toBeUpdatedPost.save()
         return { updated: true }
