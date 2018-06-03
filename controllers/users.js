@@ -5,6 +5,7 @@ const Boom = require('boom')
 class UsersController extends Controller {
   init() {
     this.get('/users/students', this.getAll93Students)
+    this.get('/users/{username}', this.getByUsername)
   }
 
   async getAll93Students (request, h){
@@ -26,6 +27,15 @@ class UsersController extends Controller {
       throw Boom.badRequest()
     }
   }
+  async getByUsername (request, h) {
+
+    let user = await User.findOne({username: request.params.username})
+    user.votes = undefined
+    return { user }
+  }
 }
+
+
+
 
 module.exports = UsersController
