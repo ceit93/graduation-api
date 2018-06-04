@@ -72,7 +72,6 @@ class PostsController extends Controller {
     delete request.payload.image
 
     try {
-      console.log(request.payload)
       post = new Post(request.payload)
       post.user = request.user._id
       post.approved = true
