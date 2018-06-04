@@ -1,9 +1,11 @@
 const { Controller } = require('bak')
+const { upload, url } = require('@bakjs/minio')
 const { User } = require('../models')
 const Boom = require('boom')
 
 class UsersController extends Controller {
   init() {
+    this.post('/profie', this.updateProfile)
     this.get('/users/students', this.getAll93Students)
     this.get('/users/{username}', this.getByUsername)
   }
@@ -64,6 +66,25 @@ class UsersController extends Controller {
     user.posts = toBeDisplayedPosts
 
     return { user }
+  }
+
+  async updateProfile(request, h) {
+    let user = request.user._id
+    try {
+      user = await User.findById(user)
+      if (request.payload.image instanceof Buffer) {
+        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
+        user.image = image
+      }
+
+      await user.save()
+
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+
+    }
   }
 }
 
