@@ -25,7 +25,6 @@ class UsersController extends Controller {
               result.std_numbers = number
               result.name = user.name
               result.username = user.username
-              result.objectID = user._id
               results.push(result)
             }
           }
