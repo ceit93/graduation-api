@@ -26,6 +26,7 @@ class UsersController extends Controller {
               result.name = user.name
               result.username = user.username
               result.objectID = user._id
+              result.avatar = user.avatar
               results.push(result)
             }
           }
@@ -70,16 +71,19 @@ class UsersController extends Controller {
 
   async updateProfile(request, h) {
     let user = request.user._id
+    let avatar = request.payload.avatar
+    delete request.payload.avatar
+
     try {
       user = await User.findById(user)
-      if (request.payload.image instanceof Buffer) {
-        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
-        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
-        user.image = image
+      if (avatar instanceof Buffer) {
+        avatar = await upload('users', user._id + '.jpg', avatar, 'image/jpeg')
+        avatar = url('users', user._id + '.jpg', avatar, 'image/jpeg')
+        user.avatar = avatar
       }
 
       await user.save()
-
+      return {avatar}
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
