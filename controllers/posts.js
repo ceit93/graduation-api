@@ -156,7 +156,7 @@ class PostsController extends Controller {
         let user = await User.findOne({posts: post})
         for (let post in user.posts) {
           if (user.posts[post].equals(toBeDeletedPost._id)) {
-            user.posts.slice(post, 1)
+            user.posts.splice(post, 1)
             break
           }
         }
