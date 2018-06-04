@@ -136,12 +136,11 @@ class PostsController extends Controller {
         await toBeUpdatedPost.save()
       }
       if (request.user.posts.indexOf(post) !== -1) {
-        if (approved) {
-          toBeUpdatedPost.approved = approved
-          await toBeUpdatedPost.save()
-        }
+        toBeUpdatedPost.approved = approved
+        await toBeUpdatedPost.save()
       }
-      return { updated: true }
+      // return { updated: true }
+      return {toBeUpdatedPost}
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
