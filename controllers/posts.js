@@ -121,20 +121,27 @@ class PostsController extends Controller {
 
   async updatePost (request, h) {
     let post = request.params.post
+    let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
 
     try {
       let toBeUpdatedPost = await Post.findById(post)
       if (request.user._id.equals(toBeUpdatedPost.user)) {
+        if (request.payload.data.approved)
+          delete request.payload.data.approved
         toBeUpdatedPost.set(request.payload.data)
         if (request.payload.image instanceof Buffer) {
           toBeUpdatedPost.image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
         }
         await toBeUpdatedPost.save()
-        return { updated: true }
-      } else {
-        return Boom.unauthorized()
       }
+      if (request.user.posts.indexOf(post) !== -1) {
+        if (approved) {
+          toBeUpdatedPost.approved = approved
+          await toBeUpdatedPost.save()
+        }
+      }
+      return { updated: true }
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
