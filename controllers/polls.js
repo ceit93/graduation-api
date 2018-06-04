@@ -13,30 +13,12 @@ class PollsController extends Controller {
 
 
   async submitPolls (request, h) {
-    let user = request.user
-    let votes = request.payload.data.votes
-    // console.log(request.payload.data)
-    let votesResults = []
-
     try {
-
-      for(let v of votes){
-        let qualObjectId, candidateObjectId
-        if(v.std_numbers) {
-          candidateObjectId = v.std_numbers.objectID
-        }
-        qualObjectId = v._id
-        let vote = new Vote()
-        vote.candidate = candidateObjectId
-        vote.qualification = qualObjectId
-        await vote.save()
-        votesResults.push(vote)
-      }
-
-      user.votes = votesResults
-      user.save()
-
-      return votesResults
+      let user = await User.findById(request.user._id)
+      let votes = request.payload.votes
+      user.votes = votes
+      await user.save()
+      return user.votes
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
@@ -68,30 +50,42 @@ class PollsController extends Controller {
   // }
 
   async getSavedPollsByUser (request, h) {
-
     let voteResults = []
-    let user = request.user.populate('votes')
-
     try {
-      // let user = await User.findById(request.user._id).populate('votes')
-      for(let voteID of user.votes){
-        console.log(voteID)
-        let voteResult = {}
-        let vote = await Vote.findById(voteID)
-        let voteTitle = await Qualification.findById(vote.qualification)
-        // voteResult.title = voteQualification.title
-        console.log(voteTitle)
-      //
-      //   let voteCandidate = await User.findById(vote.candidate)
-      //   voteResult.username = voteCandidate.username
-      //
-      //   voteResults.push(voteResult)
+      let user = await User.findById(request.user._id)
+      let votes = user.votes.toObject()
+      if (!user.locked){
+        user.locked = true
+        await user.save()
+        let quals = await Qualification.find({approved: true})
+        // Find the new approved qualification
+        for(let i in quals){
+          let qual = quals[i]
+          let found = false
+          for (let j in votes){
+            let vote = votes[j]
+            if(qual._id === vote.qualification._id)
+              found = true
+          }
+          if (!found){
+            console.log(i + ': NOT FOUND')
+            let vote = new Vote()
+            vote.qualification = qual
+            vote.candidate = null
+            votes.push(vote)
+          }
+        }
+        user.locked = false
+        user.votes = votes
+        await user.save()
+        return user.votes
+      } else {
+        throw Boom.badRequest()
       }
-
-      return user
-
     } catch (e) {
       console.log(e)
+      user.locked = false
+      await user.save()
       throw Boom.badRequest()
     }
   }
