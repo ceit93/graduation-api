@@ -49,10 +49,15 @@ class PollsController extends Controller {
   //   }
   // }
 
+
+
+
+
   async getSavedPollsByUser (request, h) {
     let voteResults = []
+    let user
     try {
-      let user = await User.findById(request.user._id)
+      user = await User.findById(request.user._id)
       let votes = user.votes.toObject()
       if (!user.locked){
         user.locked = true
@@ -64,7 +69,7 @@ class PollsController extends Controller {
           let found = false
           for (let j in votes){
             let vote = votes[j]
-            if(qual._id === vote.qualification._id)
+            if(qual._id.equals(vote.qualification._id))
               found = true
           }
           if (!found){
