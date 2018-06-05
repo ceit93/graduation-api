@@ -27,6 +27,7 @@ class UsersController extends Controller {
               result.username = user.username
               result.objectID = user._id
               result.avatar = user.avatar
+              result.gender = user.gender
               results.push(result)
             }
           }
