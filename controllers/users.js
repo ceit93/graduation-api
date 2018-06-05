@@ -49,7 +49,7 @@ class UsersController extends Controller {
 
     if (user._id.equals(request.user._id)) {
       for (let post in user.posts) {
-        let author = await User.findById(user.posts[post].user).select('_id name username std_numbers')
+        let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar')
         user.posts[post].user = author.toObject()
         toBeDisplayedPosts.push(user.posts[post])
       }
