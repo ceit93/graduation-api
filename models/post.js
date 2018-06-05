@@ -5,7 +5,9 @@ class Post extends Model {
     return {
       title: String,
       body: String,
-      images: [String],
+      image: String,
+      date: String,
+      approved: Boolean,
       user: {type:Schema.Types.ObjectId, ref: 'User', required: true}
     }
   }

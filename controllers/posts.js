@@ -1,6 +1,7 @@
 const { Controller } = require('bak')
 const { Post, User } = require('../models')
 const Boom = require('boom')
+const { upload, url } = require('@bakjs/minio')
 
 class PostsController extends Controller {
   init () {
@@ -67,10 +68,19 @@ class PostsController extends Controller {
 
   async createPost (request, h) {
     let post
+    let image = request.payload.image
+    delete request.payload.image
 
     try {
       post = new Post(request.payload)
       post.user = request.user._id
+      post.approved = true
+      await post.save()
+      if (image instanceof Buffer) {
+        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
+      }
+      post.image = image
       await post.save()
       let user = await User.findById(request.user._id)
       user.posts.push(post)
@@ -85,9 +95,18 @@ class PostsController extends Controller {
 
   async createPostWall (request, h) {
     let post
+    let image = request.payload.image
+    delete request.payload.image
+
     try {
       post = new Post(request.payload)
+      if (image instanceof Buffer) {
+        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', post.img, 'image/jpeg')
+      }
       post.user = request.user._id
+      post.approved = false
+      post.image = image
       await post.save()
       let user = await User.findById(request.params.user)
       user.posts.push(post)
@@ -101,16 +120,26 @@ class PostsController extends Controller {
 
   async updatePost (request, h) {
     let post = request.params.post
+    let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
 
     try {
       let toBeUpdatedPost = await Post.findById(post)
       if (request.user._id.equals(toBeUpdatedPost.user)) {
-        post.set(request.payload)
-        await post.save()
-        return { updated: true }
-      } else {
-        return Boom.unauthorized()
+        if (request.payload.data.approved)
+          delete request.payload.data.approved
+        toBeUpdatedPost.set(request.payload.data)
+        if (request.payload.image instanceof Buffer) {
+          toBeUpdatedPost.image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
+          toBeUpdatedPost.image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
+        }
+        await toBeUpdatedPost.save()
       }
+      if (request.user.posts.indexOf(post) !== -1) {
+        toBeUpdatedPost.approved = approved
+        await toBeUpdatedPost.save()
+      }
+      // return { updated: true }
+      return {toBeUpdatedPost}
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
@@ -127,7 +156,7 @@ class PostsController extends Controller {
         let user = await User.findOne({posts: post})
         for (let post in user.posts) {
           if (user.posts[post].equals(toBeDeletedPost._id)) {
-            user.posts.slice(post, 1)
+            user.posts.splice(post, 1)
             break
           }
         }
