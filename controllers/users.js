@@ -56,7 +56,7 @@ class UsersController extends Controller {
     } else {
       for (let post in user.posts) {
         if (user.posts[post].user.equals(request.user._id) || user.posts[post].approved) {
-          let author = await User.findById(user.posts[post].user).select('_id name username std_numbers')
+          let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar')
           user.posts[post].user = author.toObject()
           toBeDisplayedPosts.push(user.posts[post])
         }
