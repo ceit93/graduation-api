@@ -25,6 +25,7 @@ class UsersController extends Controller {
 
   async getByUsername (request, h) {
     let user = await User.findOne({ username: request.params.username }).populate('posts')
+    // request.authorize('can_request_wall', user)
     user.votes = undefined
     user = user.toObject()
     let toBeDisplayedPosts = []
