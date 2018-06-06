@@ -10,8 +10,12 @@ class QualificationsController extends Controller {
 
   async showAllQualifications (request, h) {
     let quals
+    let { limit, skip } = request.query || {}
     try {
-      quals = await Qualification.find({approved: true})
+      quals = Qualification.find({ approved: true })
+      quals.limit(parseInt(limit) || 100)
+      quals.skip(parseInt(skip) || 0)
+      quals = await quals
       return { quals }
     } catch (e) {
       console.log(e)

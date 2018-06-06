@@ -15,7 +15,7 @@ class UsersController extends Controller {
 
   async getAll93Students (request, h){
     let results = []
-    let exceptions = ['9328008' , '9328031']
+    let exceptions = ['9328008' , '9328031', '9313020', '9313013', '9313016', '9431501', ]
     try{
       let users = await User.find()
 

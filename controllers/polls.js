@@ -8,7 +8,7 @@ class PollsController extends Controller {
   init (){
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
-    this.get('/polls/results', this.getVotesForUser)
+    this.get('/polls/results', this.getAllVoteResults)
   }
 
 
@@ -25,7 +25,7 @@ class PollsController extends Controller {
     }
   }
 
-  async getVotesForUser (request, h) {
+  async getAllVoteResults (request, h) {
 
 
     let totalResults = []
@@ -33,13 +33,9 @@ class PollsController extends Controller {
       let targetUsers = await User.find()
       let i = 0
       for(let targetUser of targetUsers) {
-        let targetUserName = targetUser.name
         let voteResults = []
-        // let targetUser = await User.findById('5b157fae62f4a0240342ef87')
-        // console.log(targetUser)
         let users = await User.find()
         for (let user of users) {
-          // console.log(user.votes)
           for (let vote of user.votes) {
             if (vote.candidate) {
               if (targetUser._id.equals(vote.candidate)) {
