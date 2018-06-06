@@ -41,8 +41,8 @@ class PollsController extends Controller {
               if (targetUser._id.equals(vote.candidate)) {
                 let voteResult = {}
                 let voter = user
-                voteResult.voter = voter.name
                 voteResult.tarin = vote.qualification.title
+                voteResult.voter = voter.name
                 voteResults.push(voteResult)
               }
             }
