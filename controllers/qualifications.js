@@ -28,16 +28,17 @@ class QualificationsController extends Controller {
     try{
       let qualifications = await Qualification.find()
       let isNewTarin = true
-      for(let qual of qualifications){
-        if(qual.title === subject){
+      for (let qual of qualifications) {
+        if (qual.title === subject) {
           isNewTarin = false
         }
       }
-      if(isNewTarin){
+      if (isNewTarin) {
         let newQualification = new Qualification()
         newQualification.title = subject
         newQualification.approved = false
         await newQualification.save()
+        request.audit('SUBMIT_QUALIFICATION', newQualification)
       }
       return qualifications
     } catch (e) {
