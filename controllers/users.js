@@ -7,11 +7,15 @@ class UsersController extends Controller {
   init() {
     this.post('/profie', this.updateProfile)
     this.get('/users/students', this.getAll93Students)
+    this.get('/users', this.getAllUsers)
     this.get('/users/{username}', this.getByUsername)
   }
 
+
+
   async getAll93Students (request, h){
     let results = []
+    let exceptions = ['9328008' , '9328031']
     try{
       let users = await User.find()
 
@@ -19,7 +23,7 @@ class UsersController extends Controller {
         let student_numbers = user.toObject().std_numbers
         if(student_numbers) {
           for (let number of student_numbers) {
-            if (number.match('^9331[0-9]{3}$')) {
+            if (number.match('^9331[0-9]{3}$') || exceptions.includes(number)) {
               let result = {}
               result.objectID = user._id
               result.std_numbers = number
@@ -86,6 +90,26 @@ class UsersController extends Controller {
       await user.save()
       return {avatar}
     } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+
+    }
+  }
+
+  async getAllUsers(request, h) {
+    let results = []
+
+    try {
+      let users = await User.find()
+      for(let user of users){
+        let student_numbers = user.toObject().std_numbers
+        results.push(student_numbers)
+      }
+      results.sort()
+
+      return results
+    }
+     catch (e) {
       console.log(e)
       throw Boom.badRequest()
 
