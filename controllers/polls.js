@@ -71,7 +71,6 @@ class PollsController extends Controller {
 
 
   async getSavedPollsByUser (request, h) {
-    let voteResults = []
     let user
     try {
       user = await User.findById(request.user._id)
