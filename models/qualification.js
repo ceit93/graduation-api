@@ -4,7 +4,8 @@ class Qualification extends Model {
   static get $schema () {
     return {
       title: String,
-      approved: Boolean
+      approved: Boolean,
+      creator: { type: Schema.Types.ObjectId, ref: 'User' }
     }
   }
 }
