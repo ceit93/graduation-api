@@ -26,39 +26,43 @@ class PollsController extends Controller {
   }
 
   async getAllVoteResults (request, h) {
+    if (request.user.is_admin) {
 
 
-    let totalResults = []
-    try {
-      let targetUsers = await User.find()
-      let i = 0
-      let users = await User.find()
-      for(let targetUser of targetUsers) {
-        let voteResults = []
-        for (let user of users) {
-          for (let vote of user.votes) {
-            if (vote.candidate) {
-              if (targetUser._id.equals(vote.candidate)) {
-                let voteResult = {}
-                let voter = user
-                voteResult.tarin = vote.qualification.title
-                voteResult.voter = voter.name
-                voteResults.push(voteResult)
+      let totalResults = []
+      try {
+        let targetUsers = await User.find()
+        let i = 0
+        let users = await User.find()
+        for (let targetUser of targetUsers) {
+          let voteResults = []
+          for (let user of users) {
+            for (let vote of user.votes) {
+              if (vote.candidate) {
+                if (targetUser._id.equals(vote.candidate)) {
+                  let voteResult = {}
+                  let voter = user
+                  voteResult.tarin = vote.qualification.title
+                  voteResult.voter = voter.name
+                  voteResults.push(voteResult)
+                }
               }
             }
           }
+          let totalResult = {}
+          totalResult.name = targetUser.name
+          totalResult.votes = voteResults
+          totalResults.push(totalResult)
         }
-        let totalResult = {}
-        totalResult.name = targetUser.name
-        totalResult.votes = voteResults
-        totalResults.push(totalResult)
+
+        return totalResults
+
+      } catch (e) {
+        console.log(e)
+        throw Boom.badRequest()
       }
-
-      return totalResults
-
-    } catch (e) {
-      console.log(e)
-      throw Boom.badRequest()
+    } else {
+      return Boom.unauthorized()
     }
   }
 
