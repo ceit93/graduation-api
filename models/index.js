@@ -4,7 +4,7 @@ const Qualification = require('./qualification')
 const Vote = require('./vote')
 const Notification = require('./notification')
 const Question = require('./question')
-const Question = require('./interview')
+const Interview = require('./interview')
 module.exports = {
   User,
   Post,
