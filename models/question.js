@@ -9,4 +9,4 @@ class Question extends Model {
   }
 }
 
-module.exports = Interview.$model
+module.exports = Question.$model
