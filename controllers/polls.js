@@ -32,9 +32,9 @@ class PollsController extends Controller {
     try {
       let targetUsers = await User.find()
       let i = 0
+      let users = await User.find()
       for(let targetUser of targetUsers) {
         let voteResults = []
-        let users = await User.find()
         for (let user of users) {
           for (let vote of user.votes) {
             if (vote.candidate) {
