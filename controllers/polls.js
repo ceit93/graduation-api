@@ -89,7 +89,6 @@ class PollsController extends Controller {
               found = true
           }
           if (!found){
-            console.log(i + ': NOT FOUND')
             let vote = new Vote()
             vote.qualification = qual
             vote.candidate = null
