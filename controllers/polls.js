@@ -8,7 +8,7 @@ class PollsController extends Controller {
   init (){
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
-    // this.get('/polls/{username}', this.getVotesForUser)
+    this.get('/polls/results', this.getVotesForUser)
   }
 
 
@@ -25,29 +25,46 @@ class PollsController extends Controller {
     }
   }
 
-  // async getVotesForUser (request, h) {
-  //
-  //   let voteResults = []
-  //
-  //   try {
-  //     let user = await User.findOne({username:request.params.username})
-  //     let allVotes = await Vote.find().populate('candidate')
-  //     for(let vote of allVotes){
-  //       if(vote.candidate.username === request.params.username){
-  //         let tarin = await Qualification.findById(vote.qualification)
-  //         voteResults.push(tarin.title)
-  //       }
-  //     }
-  //
-  //
-  //
-  //     return voteResults
-  //
-  //   } catch (e) {
-  //     console.log(e)
-  //     throw Boom.badRequest()
-  //   }
-  // }
+  async getVotesForUser (request, h) {
+
+
+    let totalResults = []
+    try {
+      let targetUsers = await User.find()
+      let i = 0
+      for(let targetUser of targetUsers) {
+        let targetUserName = targetUser.name
+        let voteResults = []
+        // let targetUser = await User.findById('5b157fae62f4a0240342ef87')
+        // console.log(targetUser)
+        let users = await User.find()
+        for (let user of users) {
+          // console.log(user.votes)
+          for (let vote of user.votes) {
+            if (vote.candidate) {
+              if (targetUser._id.equals(vote.candidate)) {
+                let voteResult = {}
+                let voter = user
+                voteResult.voter = voter.name
+                voteResult.tarin = vote.qualification.title
+                voteResults.push(voteResult)
+              }
+            }
+          }
+        }
+        let totalResult = {}
+        totalResult.name = targetUser.name
+        totalResult.votes = voteResults
+        totalResults.push(totalResult)
+      }
+
+      return totalResults
+
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
 
 
 
