@@ -11,34 +11,11 @@ class UsersController extends Controller {
     this.get('/users/{username}', this.getByUsername)
   }
 
-
-
   async getAll93Students (request, h){
-    let results = []
-    let exceptions = ['9328008' , '9328031', '9313020', '9313013', '9313016', '9431501', ]
     try{
-      let users = await User.find()
-
-      for(let user of users){
-        let student_numbers = user.toObject().std_numbers
-        if(student_numbers) {
-          for (let number of student_numbers) {
-            if (number.match('^9331[0-9]{3}$') || exceptions.includes(number)) {
-              let result = {}
-              result.objectID = user._id
-              result.std_numbers = number
-              result.name = user.name
-              result.username = user.username
-              result.objectID = user._id
-              result.avatar = user.avatar
-              result.gender = user.gender
-              results.push(result)
-            }
-          }
-        }
-      }
-
-      return results
+      let users = await User.find({ $or: [{ std_numbers: { $regex: /^9331[0-9]{3}$/ } }, { authorized: true }] })
+        .select('_id name username std_numbers avatar gender')
+      return users
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
