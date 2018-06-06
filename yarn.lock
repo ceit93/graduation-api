@@ -42,6 +42,12 @@
     mongoose "^5.0.1"
     mongoose-fill "^1.7.0"
 
+"@bakjs/policy@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@bakjs/policy/-/policy-2.1.0.tgz#fd26dd3d1317a090cba5fbd90b1c3dfaec16dfaa"
+  dependencies:
+    boom "^7.1.1"
+
 "@bakjs/route-table@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@bakjs/route-table/-/route-table-2.2.0.tgz#21ba04615f52f886735fa52ef57d0f4bb154480f"
