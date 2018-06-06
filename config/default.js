@@ -40,5 +40,8 @@ module.exports = {
       dsn: null
     },
     audit: {}
+  },
+  policy: {
+    // policies:''
   }
 }
