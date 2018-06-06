@@ -15,6 +15,7 @@ class PostsController extends Controller {
   }
 
   async showAllPosts (request, h) {
+    // request.authorize('is_93')
     try {
       let user = await User.findById(request.user._id).populate('posts')
       let posts = []
@@ -23,8 +24,6 @@ class PostsController extends Controller {
           posts.push(post)
         }
       }
-
-
       return { posts }
     } catch (e) {
       console.log(e)
@@ -33,6 +32,7 @@ class PostsController extends Controller {
   }
 
   async showAllWall(request, h) {
+    // request.authorize('is_93')
     try {
       let user = await User.findById(request.user._id).populate('posts')
       let posts = []
@@ -41,8 +41,6 @@ class PostsController extends Controller {
           posts.push(post)
         }
       }
-
-
       return { posts }
     } catch (e) {
       console.log(e)
@@ -52,7 +50,6 @@ class PostsController extends Controller {
 
   async showPost (request, h) {
     let post = request.params.post
-
     try {
       post = await Post.findById(post)
       if (post) {
@@ -67,6 +64,7 @@ class PostsController extends Controller {
   }
 
   async createPost (request, h) {
+    // request.authorize('is_93')
     let post
     let image = request.payload.image
     delete request.payload.image
@@ -94,7 +92,10 @@ class PostsController extends Controller {
   }
 
   async createPostWall (request, h) {
+    let userWall = await User.findById(request.params.user)
+    // request.authorize('can_post_wall', userWall)
     let post
+
     let image = request.payload.image
     delete request.payload.image
 
@@ -119,6 +120,8 @@ class PostsController extends Controller {
   }
 
   async updatePost (request, h) {
+    let userWall = await User.findById(request.params.user)
+    // request.authorize('can_post_wall', userWall)
     let post = request.params.post
     let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
 

@@ -5,7 +5,7 @@ const { Schema } = require('@bakjs/mongo')
 
 class User extends Auth.User {
   static get $visible() {
-    return ['_id', 'name', 'email', 'username', 'posts', 'votes', 'std_numbers','avatar', 'gender']
+    return ['_id', 'name', 'email', 'username', 'posts', 'votes', 'std_numbers','avatar', 'gender', 'authorized']
   }
 
   static get $schema () {
@@ -14,7 +14,8 @@ class User extends Auth.User {
       avatar: String,
       votes: [],
       locked: Boolean,
-      gender: String
+      gender: String,
+      authorized: Boolean
     })
   }
 }

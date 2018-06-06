@@ -12,9 +12,11 @@ module.exports = {
   registrations: [
     '@bakjs/mongo',
     '@bakjs/audit',
-    '@bakjs/auth'
+    '@bakjs/auth',
+    '@bakjs/policy'
   ],
   mongo: Config.get('mongo'),
   auth: Config.get('auth'),
-  minio: Config.get('minio')
+  minio: Config.get('minio'),
+  policy: Config.get('policy')
 }

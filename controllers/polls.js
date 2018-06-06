@@ -8,7 +8,7 @@ class PollsController extends Controller {
   init (){
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
-    // this.get('/polls/{username}', this.getVotesForUser)
+    this.get('/polls/results', this.getAllVoteResults)
   }
 
 
@@ -25,29 +25,46 @@ class PollsController extends Controller {
     }
   }
 
-  // async getVotesForUser (request, h) {
-  //
-  //   let voteResults = []
-  //
-  //   try {
-  //     let user = await User.findOne({username:request.params.username})
-  //     let allVotes = await Vote.find().populate('candidate')
-  //     for(let vote of allVotes){
-  //       if(vote.candidate.username === request.params.username){
-  //         let tarin = await Qualification.findById(vote.qualification)
-  //         voteResults.push(tarin.title)
-  //       }
-  //     }
-  //
-  //
-  //
-  //     return voteResults
-  //
-  //   } catch (e) {
-  //     console.log(e)
-  //     throw Boom.badRequest()
-  //   }
-  // }
+  async getAllVoteResults (request, h) {
+    if (request.user.is_admin) {
+
+
+      let totalResults = []
+      try {
+        let targetUsers = await User.find()
+        let i = 0
+        let users = await User.find()
+        for (let targetUser of targetUsers) {
+          let voteResults = []
+          for (let user of users) {
+            for (let vote of user.votes) {
+              if (vote.candidate) {
+                if (targetUser._id.equals(vote.candidate)) {
+                  let voteResult = {}
+                  let voter = user
+                  voteResult.tarin = vote.qualification.title
+                  voteResult.voter = voter.name
+                  voteResults.push(voteResult)
+                }
+              }
+            }
+          }
+          let totalResult = {}
+          totalResult.name = targetUser.name
+          totalResult.votes = voteResults
+          totalResults.push(totalResult)
+        }
+
+        return totalResults
+
+      } catch (e) {
+        console.log(e)
+        throw Boom.badRequest()
+      }
+    } else {
+      return Boom.unauthorized()
+    }
+  }
 
 
 
