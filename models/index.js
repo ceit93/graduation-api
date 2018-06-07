@@ -11,5 +11,6 @@ module.exports = {
   Qualification,
   Vote,
   Notification,
+  Question,
   Interview
 }

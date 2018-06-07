@@ -21,12 +21,12 @@ class InterviewsController extends Controller {
       console.log(e)
       throw Boom.badRequest()
     }
+
   }
 
   async getSavedInterviewsByUser (request, h) {
-    let user
     try {
-      user = await User.findById(request.user._id)
+      let user = await User.findById(request.user._id)
       let userInterviews = user.interviews.toObject()
       if (!user.locked){
         user.locked = true
@@ -40,10 +40,10 @@ class InterviewsController extends Controller {
               found = true
           }
           if (!found){
-            console.log(i + ': NOT FOUND')
-            let newInterview = new Interview()
-            newInterview.question = q
-            newInterview.answer = ''
+            let newInterview = new Interview({
+              question: q,
+              answer: ''
+            })
             userInterviews.push(newInterview)
           }
         }
