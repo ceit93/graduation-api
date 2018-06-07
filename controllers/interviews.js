@@ -26,7 +26,7 @@ class InterviewsController extends Controller {
 
   async getSavedInterviewsByUser (request, h) {
     try {
-      let user = await User.findById(request.user._id)
+      let user = await User.findById(request.user._id).populate('interviews.question')
       let userInterviews = user.interviews.toObject()
       if (!user.locked){
         user.locked = true
