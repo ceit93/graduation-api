@@ -26,9 +26,7 @@ class PollsController extends Controller {
   }
 
   async getAllVoteResults (request, h) {
-    if (request.user.is_admin) {
-
-
+    if (request.user.toObject().is_admin) {
       let totalResults = []
       try {
         let targetUsers = await User.find()
