@@ -14,7 +14,7 @@ class UsersController extends Controller {
   async getAll93Students (request, h){
     try{
       let users = await User.find({ $or: [{ std_numbers: { $regex: /^9331[0-9]{3}$/ } }, { authorized: true }] })
-        .select('_id name username std_numbers avatar gender')
+        .select('_id name username std_numbers avatar gender modified_name')
       return users
     } catch (e) {
       console.log(e)
