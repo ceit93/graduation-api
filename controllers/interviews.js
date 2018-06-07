@@ -36,7 +36,7 @@ class InterviewsController extends Controller {
         for(let q of questions){
           let found = false
           for (let interview of userInterviews){
-            if(q._id.equals(interview.question))
+            if(q._id.equals(interview.question._id))
               found = true
           }
           if (!found){
