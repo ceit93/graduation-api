@@ -26,9 +26,7 @@ class PollsController extends Controller {
   }
 
   async getAllVoteResults (request, h) {
-    if (request.user.is_admin) {
-
-
+    if (request.user.toObject().is_admin) {
       let totalResults = []
       try {
         let targetUsers = await User.find()
@@ -71,7 +69,6 @@ class PollsController extends Controller {
 
 
   async getSavedPollsByUser (request, h) {
-    let voteResults = []
     let user
     try {
       user = await User.findById(request.user._id)
@@ -90,7 +87,6 @@ class PollsController extends Controller {
               found = true
           }
           if (!found){
-            console.log(i + ': NOT FOUND')
             let vote = new Vote()
             vote.qualification = qual
             vote.candidate = null

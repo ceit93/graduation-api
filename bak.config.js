@@ -7,7 +7,8 @@ module.exports = {
     './controllers/qualifications',
     './controllers/polls',
     './controllers/users',
-    './controllers/notifications'
+    './controllers/notifications',
+    './controllers/interviews'
   ],
   registrations: [
     '@bakjs/mongo',
