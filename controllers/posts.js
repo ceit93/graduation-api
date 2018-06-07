@@ -12,6 +12,7 @@ class PostsController extends Controller {
     this.post('/posts/{post}', this.updatePost)
     this.post('/posts', this.createPost)
     this.delete('/posts/{post}', this.deletePost)
+    this.get('/posts/owner/{postID}' , this.getPostOwner)
   }
 
   async showAllPosts (request, h) {
@@ -130,7 +131,7 @@ class PostsController extends Controller {
       if (request.user._id.equals(toBeUpdatedPost.user)) {
         if (request.payload.data.approved)
           delete request.payload.data.approved
-        toBeUpdatedPost.set(request.payload.data)
+        toBeUpdatedPost.set(request.payload)
         if (request.payload.image instanceof Buffer) {
           toBeUpdatedPost.image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
@@ -171,6 +172,25 @@ class PostsController extends Controller {
       }
 
     } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
+
+  async getPostOwner(request, h){
+    let postID = request.params.postID
+    let owner
+    let users = await User.find()
+    try{
+      for(let user of users){
+        for(let post of user.posts){
+          if(post.equals(postID)){
+            owner = user
+          }
+        }
+      }
+      return owner
+    }catch (e) {
       console.log(e)
       throw Boom.badRequest()
     }
