@@ -6,15 +6,38 @@ const Boom = require('boom')
 
 class InterviewsController extends Controller {
   init() {
-    this.get('/interviews', this.getSavedInterviewsByUser)
-    this.post('/interviews/submit', this.submitInterviews)
+    this.get('/questions', this.getQuestions)
+    this.post('/interviews/{question}/submit', this.submitInterviews)
+    this.get('/interviews', this.getInterviews)
+    this.post('/interviews', this.updateInBulk)
   }
 
   async submitInterviews (request, h) {
+    let answer = request.payload.answer
     try {
-      let user = await User.findById(request.user._id)
-      let interviews = request.payload.interviews
-      user.interviews = interviews
+      let found = false
+      let user = await User.findById(request.user._id).populate('interviews')
+      let question = await Question.findById(request.params.question)
+      if (question.approved) {
+        for (let interview in user.toObject().interviews) {
+          if (user.interviews[interview].question.equals(question._id)) {
+            interview = await Interview.findById(user.interviews[interview]._id)
+            interview.answer = answer
+            await interview.save()
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          let interview = new Interview({
+            question: question._id,
+            answer: answer
+          })
+          await interview.save()
+          user.interviews.push(interview)
+
+        }
+      }
       await user.save()
       return { saved: true }
     } catch (e) {
@@ -24,40 +47,72 @@ class InterviewsController extends Controller {
 
   }
 
-  async getSavedInterviewsByUser (request, h) {
+  async getQuestions (request, h) {
     try {
-      let user = await User.findById(request.user._id).populate('interviews.question')
-      let userInterviews = user.interviews.toObject()
-      if (!user.locked){
-        user.locked = true
-        await user.save()
-        let questions = await Question.find({approved: true})
-        // Find the new approved question
-        for(let q of questions){
-          let found = false
-          for (let interview of userInterviews){
-            if(q._id.equals(interview.question._id))
-              found = true
-          }
-          if (!found){
-            let newInterview = new Interview({
-              question: q,
-              answer: ''
-            })
-            userInterviews.push(newInterview)
-          }
-        }
-        user.locked = false
-        user.interviews = userInterviews
-        await user.save()
-        return user.interviews
-      } else {
-        throw Boom.badRequest()
-      }
+      let questions = await Question.find({approved: true})
+      return { questions }
     } catch (e) {
       console.log(e)
-      user.locked = false
+      throw Boom.badRequest()
+    }
+  }
+
+  async getInterviews(request, h) {
+    try {
+      let user = await User.findById(request.user._id).populate('interviews')
+      user = user.toObject()
+      for (let interview in user.interviews) {
+        user.interviews[interview].question = await Question.findById(user.interviews[interview].question)
+      }
+      return user
+
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+
+    }
+  }
+
+  async updateInBulk(request, h) {
+    let user = await User.findById(request.user._id).populate('interviews')
+    try {
+      let found = false
+      let interviews = request.payload.interviews
+      for (let interview in interviews) {
+        if (interviews[interview]._id) {
+          let interviewInDB = await Interview.findById(interviews[interview]._id)
+          interviewInDB.answer = interviews[interview].answer
+          await interviewInDB.save()
+        } else {
+          let question = await Question.findById(interviews[interview].question._id)
+          if (question.approved) {
+            for (let userInterview in user.toObject().interviews) {
+              if (user.interviews[userInterview].question.equals(question._id)) {
+                let interviewInDB = await Interview.findById(user.interviews[userInterview]._id)
+                interviewInDB.answer = interviews[interview].answer
+                await interviewInDB.save()
+                found = true
+                break
+              }
+            }
+            if (!found) {
+              let interviewInDB = new Interview({
+                question: question._id,
+                answer: interviews[interview].answer
+              })
+              await interviewInDB.save()
+              user.interviews.push(interviewInDB)
+
+            }
+          }
+
+        }
+      }
+
       await user.save()
+      return { saved: true }
+    } catch (e) {
+      console.log(e)
       throw Boom.badRequest()
     }
   }
