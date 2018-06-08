@@ -179,17 +179,12 @@ class PostsController extends Controller {
 
   async getPostOwner(request, h){
     let postID = request.params.postID
-    let owner
-    let users = await User.find()
     try{
-      for(let user of users){
-        for(let post of user.posts){
-          if(post.equals(postID)){
-            owner = user
-          }
-        }
-      }
-      return owner
+      let user = await User.find({ 'posts' : {'_id': postID} })
+      if (user.length > 0)
+        return user[0]
+      else
+        throw Boom.badRequest()
     }catch (e) {
       console.log(e)
       throw Boom.badRequest()
