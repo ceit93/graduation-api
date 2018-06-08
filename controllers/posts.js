@@ -10,6 +10,7 @@ class PostsController extends Controller {
     this.post('/posts/wall/{user}', this.createPostWall)
     this.get('/posts/{post}', this.showPost)
     this.post('/posts/{post}', this.updatePost)
+    this.post('/posts/{post}/image', this.updatePostImage)
     this.post('/posts', this.createPost)
     this.delete('/posts/{post}', this.deletePost)
     this.get('/posts/owner/{postID}' , this.getPostOwner)
@@ -104,7 +105,7 @@ class PostsController extends Controller {
       post = new Post(request.payload)
       if (image instanceof Buffer) {
         image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
-        image = url('posts', post._id + '.jpg', post.img, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
       }
       post.user = request.user._id
       post.approved = false
@@ -120,23 +121,56 @@ class PostsController extends Controller {
     }
   }
 
-  async updatePost (request, h) {
-    let userWall = await User.findById(request.params.user)
-    // request.authorize('can_post_wall', userWall)
+  async updatePostImage (request, h) {
+    console.log("GOT IT!")
+    let user = request.user._id
+    console.log("payload: " , request.payload)
+    console.log("params: " , request.params)
     let post = request.params.post
-    let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
+    let image = request.payload.image
+    delete request.payload.image
 
     try {
+      if (request.user._id.equals(post.user)){
+        console.log('ok')
+      }
+      post = await Post.findById(post)
+      console.log('post is:', post)
+      if (image instanceof Buffer) {
+        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
+        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
+        post.image = image
+        console.log('post.image is : ', image)
+      }
+      console.log('return1')
+      await post.save()
+      console.log('return1')
+      console.log('post is: ', post)
+      // return {image: post.image}
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+
+    }
+  }
+
+  async updatePost (request, h) {
+    let post = request.params.post
+    let image = request.payload.data.image
+    delete request.payload.data.image
+    try {
+      let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
       let toBeUpdatedPost = await Post.findById(post)
       if (request.user._id.equals(toBeUpdatedPost.user)) {
         if (request.payload.data.approved)
           delete request.payload.data.approved
-        toBeUpdatedPost.set(request.payload)
+        toBeUpdatedPost.set(request.payload.data)
         if (request.payload.image instanceof Buffer) {
-          toBeUpdatedPost.image = await upload('posts', item._id + '.jpg', image, 'image/jpeg')
-          toBeUpdatedPost.image = url('posts', item._id + '.jpg', item.img, 'image/jpeg')
+          image = await upload('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
+          image = url('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
+          toBeUpdatedPost.image = image
         }
-        await toBeUpdatedPost.save()
+        toBeUpdatedPost = await toBeUpdatedPost.save()
       }
       if (request.user.posts.indexOf(post) !== -1) {
         toBeUpdatedPost.approved = approved
