@@ -186,6 +186,8 @@ class PostsController extends Controller {
           image = await upload('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           image = url('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = image
+        } else if (image === '') {
+          toBeUpdatedPost.image = image
         }
         toBeUpdatedPost = await toBeUpdatedPost.save()
       }
