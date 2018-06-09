@@ -122,31 +122,22 @@ class PostsController extends Controller {
   }
 
   async updatePostImage (request, h) {
-    console.log("GOT IT!")
     let user = request.user._id
-    console.log("payload: " , request.payload)
-    console.log("params: " , request.params)
     let post = request.params.post
     let image = request.payload.image
     delete request.payload.image
 
     try {
       if (request.user._id.equals(post.user)){
-        console.log('ok')
       }
       post = await Post.findById(post)
-      console.log('post is:', post)
       if (image instanceof Buffer) {
         image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
         image = url('posts', post._id + '.jpg', image, 'image/jpeg')
         post.image = image
-        console.log('post.image is : ', image)
       }
-      console.log('return1')
       await post.save()
-      console.log('return1')
-      console.log('post is: ', post)
-      // return {image: post.image}
+      return {image: post.image}
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
