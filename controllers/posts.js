@@ -7,11 +7,27 @@ class PostsController extends Controller {
   init () {
     this.get('/posts', this.showAllPosts)
     this.get('/posts/wall', this.showAllWall)
-    this.post('/posts/wall/{user}', this.createPostWall)
+    this.post('/posts/wall/{user}', this.createPostWall, {
+      payload: {
+        maxBytes: 1000 * 1000 * 5 // 5Mb
+      }
+    })
     this.get('/posts/{post}', this.showPost)
-    this.post('/posts/{post}', this.updatePost)
-    this.post('/posts/{post}/image', this.updatePostImage)
-    this.post('/posts', this.createPost)
+    this.post('/posts/{post}', this.updatePost, {
+      payload: {
+        maxBytes: 1000 * 1000 * 5 // 5Mb
+      }
+    })
+    this.post('/posts/{post}/image', this.updatePostImage, {
+      payload: {
+        maxBytes: 1000 * 1000 * 5 // 5Mb
+      }
+    })
+    this.post('/posts', this.createPost, {
+      payload: {
+        maxBytes: 1000 * 1000 * 5 // 5Mb
+      }
+    })
     this.delete('/posts/{post}', this.deletePost)
     this.get('/posts/owner/{postID}' , this.getPostOwner)
   }
@@ -161,7 +177,6 @@ class PostsController extends Controller {
       let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
       let toBeUpdatedPost = await Post.findById(post)
       if (request.user._id.equals(toBeUpdatedPost.user)) {
-        console.log(request.payload.image)
         if (request.payload.data) {
           if (request.payload.data.approved)
             delete request.payload.data.approved
