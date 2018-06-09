@@ -147,16 +147,18 @@ class PostsController extends Controller {
 
   async updatePost (request, h) {
     let post = request.params.post
-    let image = request.payload.data.image
-    delete request.payload.data.image
+    let image = request.payload.image
     try {
       let approved = request.payload ? (request.payload.data ? request.payload.data.approved : null) : null
       let toBeUpdatedPost = await Post.findById(post)
       if (request.user._id.equals(toBeUpdatedPost.user)) {
-        if (request.payload.data.approved)
-          delete request.payload.data.approved
-        toBeUpdatedPost.set(request.payload.data)
-        if (request.payload.image instanceof Buffer) {
+        console.log(request.payload.image)
+        if (request.payload.data) {
+          if (request.payload.data.approved)
+            delete request.payload.data.approved
+          toBeUpdatedPost.set(request.payload.data)
+        }
+        if (image instanceof Buffer) {
           image = await upload('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           image = url('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = image
