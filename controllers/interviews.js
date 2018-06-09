@@ -7,6 +7,7 @@ const Boom = require('boom')
 class InterviewsController extends Controller {
   init() {
     this.get('/questions', this.getQuestions)
+    this.post('/questions', this.createQuestion)
     this.post('/interviews/{question}/submit', this.submitInterviews)
     this.get('/interviews', this.getInterviews)
     this.post('/interviews', this.updateInBulk)
@@ -35,7 +36,6 @@ class InterviewsController extends Controller {
           })
           await interview.save()
           user.interviews.push(interview)
-
         }
       }
       await user.save()
@@ -65,11 +65,9 @@ class InterviewsController extends Controller {
         user.interviews[interview].question = await Question.findById(user.interviews[interview].question)
       }
       return user
-
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
-
     }
   }
 
@@ -102,15 +100,30 @@ class InterviewsController extends Controller {
               })
               await interviewInDB.save()
               user.interviews.push(interviewInDB)
-
             }
           }
-
         }
       }
-
       await user.save()
       return { saved: true }
+    } catch (e) {
+      console.log(e)
+      throw Boom.badRequest()
+    }
+  }
+
+  async createQuestion(request, h) {
+    try {
+      let question = request.payload.question
+      question = new Question({
+        approved: false,
+        text: question
+      })
+
+      await question.save()
+
+      return {question}
+
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
