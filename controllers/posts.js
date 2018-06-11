@@ -18,11 +18,6 @@ class PostsController extends Controller {
         maxBytes: 1000 * 1000 * 5 // 5Mb
       }
     })
-    this.post('/posts/{post}/image', this.updatePostImage, {
-      payload: {
-        maxBytes: 1000 * 1000 * 5 // 5Mb
-      }
-    })
     this.post('/posts', this.createPost, {
       payload: {
         maxBytes: 1000 * 1000 * 5 // 5Mb
@@ -134,30 +129,6 @@ class PostsController extends Controller {
     } catch (e) {
       console.log(e)
       throw Boom.badRequest()
-    }
-  }
-
-  async updatePostImage (request, h) {
-    let user = request.user._id
-    let post = request.params.post
-    let image = request.payload.image
-    delete request.payload.image
-
-    try {
-      if (request.user._id.equals(post.user)){
-      }
-      post = await Post.findById(post)
-      if (image instanceof Buffer) {
-        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
-        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
-        post.image = image
-      }
-      await post.save()
-      return {image: post.image}
-    } catch (e) {
-      console.log(e)
-      throw Boom.badRequest()
-
     }
   }
 
