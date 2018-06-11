@@ -4,11 +4,11 @@ const {Schema} = require('@bakjs/mongo')
 
 const registerSchema = new Schema({
   selfPayed: {type: Boolean},
-  family: {type: Number, required: true},
-  cost: {type: Number, required: true},
+  family: {type: Number},
+  cost: {type: Number},
   Authority: {type: String},
-  phone: {type: String, required: true},
-  email: {type: String, required: true},
+  phone: {type: String},
+  email: {type: String},
   status: {type: Boolean}
 })
 
