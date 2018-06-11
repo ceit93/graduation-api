@@ -15,7 +15,7 @@ class QualificationsController extends Controller {
     let { limit, skip } = request.query || {}
     try {
       quals = Qualification.find({ approved: true })
-      quals.limit(parseInt(limit) || 100)
+      quals.limit(parseInt(limit) || 200)
       quals.skip(parseInt(skip) || 0)
       quals = await quals
       return { quals }
