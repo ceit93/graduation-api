@@ -9,6 +9,7 @@ module.exports = {
     './controllers/users',
     './controllers/notifications',
     './controllers/payment',
+    './controllers/interviews'
   ],
   registrations: [
     '@bakjs/mongo',

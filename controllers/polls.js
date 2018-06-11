@@ -9,6 +9,7 @@ class PollsController extends Controller {
     this.post('/poll/submit', this.submitPolls)
     this.get('/polls', this.getSavedPollsByUser)
     this.get('/polls/results', this.getAllVoteResults)
+    this.get('/polls/tarins', this.getTarins)
   }
 
 
@@ -26,48 +27,99 @@ class PollsController extends Controller {
   }
 
   async getAllVoteResults (request, h) {
+    if (request.user.toObject().is_admin) {
+      let totalResults = []
+      try {
+        let targetUsers = await User.find()
+        let i = 0
+        let users = await User.find()
+        for (let targetUser of targetUsers) {
+          let voteResults = []
+          for (let user of users) {
+            for (let vote of user.votes) {
+              if (vote.candidate) {
+                if (targetUser._id.equals(vote.candidate)) {
+                  let voteResult = {}
+                  let voter = user
+                  voteResult.tarin = vote.qualification.title
+                  voteResult.voter = voter.name
+                  voteResults.push(voteResult)
+                }
+              }
+            }
+          }
+          let totalResult = {}
+          totalResult.name = targetUser.name
+          totalResult.votes = voteResults
+          totalResults.push(totalResult)
+        }
 
+        return totalResults
 
-    let totalResults = []
-    try {
-      let targetUsers = await User.find()
-      let i = 0
-      let users = await User.find()
-      for(let targetUser of targetUsers) {
-        let voteResults = []
+      } catch (e) {
+        console.log(e)
+        throw Boom.badRequest()
+      }
+    } else {
+      return Boom.unauthorized()
+    }
+  }
+  async getTarins (request, h) {
+    if (request.user.toObject().is_admin) {
+      let totalResults = []
+      try {
+        let targetUsers = await User.find()
+        let qualifications = await Qualification.find({approved: true}).lean()
+
+        let i = 0
+        let users = await User.find()
         for (let user of users) {
           for (let vote of user.votes) {
-            if (vote.candidate) {
-              if (targetUser._id.equals(vote.candidate)) {
-                let voteResult = {}
-                let voter = user
-                voteResult.tarin = vote.qualification.title
-                voteResult.voter = voter.name
-                voteResults.push(voteResult)
+            for (let qualification in qualifications) {
+              if (vote.candidate && qualifications[qualification]._id.equals(vote.qualification._id)) {
+                for (let targetUser of targetUsers) {
+                  if (targetUser._id.equals(vote.candidate)) {
+                    if (!qualifications[qualification]['result']) {
+                      qualifications[qualification]['result'] = {}
+                    }
+                    if (qualifications[qualification]['result'][targetUser.name]) {
+                      qualifications[qualification]['result'][targetUser.name]++
+                    } else {
+                      qualifications[qualification]['result'][targetUser.name] = 1
+                    }
+                    break
+                  }
+                }
+              }
+              if (qualifications[qualification]['result']) {
+                let winners = [Object.keys(qualifications[qualification]['result'])[0]]
+                for (let key in qualifications[qualification]['result'])
+                  if (qualifications[qualification]['result'][winners[0]] < qualifications[qualification]['result'][key]) {
+                    winners = []
+                    winners.push(key)
+                  } else if (qualifications[qualification]['result'][winners[0]] == qualifications[qualification]['result'][key] && winners.indexOf(key)== -1) {
+                    winners.push(key)
+                  }
+
+                qualifications[qualification]['winners'] = winners
               }
             }
           }
         }
-        let totalResult = {}
-        totalResult.name = targetUser.name
-        totalResult.votes = voteResults
-        totalResults.push(totalResult)
+
+        return qualifications
+
+      } catch (e) {
+        console.log(e)
+        throw Boom.badRequest()
       }
-
-      return totalResults
-
-    } catch (e) {
-      console.log(e)
-      throw Boom.badRequest()
+    } else {
+      return Boom.unauthorized()
     }
   }
 
 
-
-
-
   async getSavedPollsByUser (request, h) {
-    let voteResults = []
     let user
     try {
       user = await User.findById(request.user._id)
@@ -86,7 +138,6 @@ class PollsController extends Controller {
               found = true
           }
           if (!found){
-            console.log(i + ': NOT FOUND')
             let vote = new Vote()
             vote.qualification = qual
             vote.candidate = null
