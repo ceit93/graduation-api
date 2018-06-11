@@ -1,10 +1,10 @@
 const {Controller} = require('bak')
 const {User} = require('../models')
 const Boom = require('boom')
-const config = require('../config/local');
+const Config = require('config');
 
 const ZarinpalCheckout = require('zarinpal-checkout');
-const zarinpal = ZarinpalCheckout.create(config.zarinpal.merchant_id, false);
+const zarinpal = ZarinpalCheckout.create(Config.get('zarinpal.merchant_id'), false);
 const baseUrl = 'http://localhost:4000'
 
 
