@@ -40,6 +40,10 @@ module.exports = {
     sentry: {
       dsn: 'SENTRY_DSN'
     }
+  },
+
+  zarinpal: {
+    merchant_id: 'ZARINPAL_ID'
   }
 
 }
