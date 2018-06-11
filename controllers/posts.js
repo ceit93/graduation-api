@@ -172,13 +172,16 @@ class PostsController extends Controller {
           if (request.payload.data.approved)
             delete request.payload.data.approved
           toBeUpdatedPost.set(request.payload.data)
+          toBeUpdatedPost.approved = false
         }
         if (image instanceof Buffer) {
           image = await upload('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           image = url('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = image
+          toBeUpdatedPost.approved = false
         } else if (image === '') {
           toBeUpdatedPost.image = image
+          toBeUpdatedPost.approved = false
         }
         toBeUpdatedPost = await toBeUpdatedPost.save()
       }
@@ -186,7 +189,6 @@ class PostsController extends Controller {
         toBeUpdatedPost.approved = approved
         await toBeUpdatedPost.save()
       }
-      // return { updated: true }
       return {toBeUpdatedPost}
     } catch (e) {
       console.log(e)
