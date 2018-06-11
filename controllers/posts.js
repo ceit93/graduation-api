@@ -18,11 +18,6 @@ class PostsController extends Controller {
         maxBytes: 1000 * 1000 * 5 // 5Mb
       }
     })
-    this.post('/posts/{post}/image', this.updatePostImage, {
-      payload: {
-        maxBytes: 1000 * 1000 * 5 // 5Mb
-      }
-    })
     this.post('/posts', this.createPost, {
       payload: {
         maxBytes: 1000 * 1000 * 5 // 5Mb
@@ -137,30 +132,6 @@ class PostsController extends Controller {
     }
   }
 
-  async updatePostImage (request, h) {
-    let user = request.user._id
-    let post = request.params.post
-    let image = request.payload.image
-    delete request.payload.image
-
-    try {
-      if (request.user._id.equals(post.user)){
-      }
-      post = await Post.findById(post)
-      if (image instanceof Buffer) {
-        image = await upload('posts', post._id + '.jpg', image, 'image/jpeg')
-        image = url('posts', post._id + '.jpg', image, 'image/jpeg')
-        post.image = image
-      }
-      await post.save()
-      return {image: post.image}
-    } catch (e) {
-      console.log(e)
-      throw Boom.badRequest()
-
-    }
-  }
-
   async updatePost (request, h) {
     let post = request.params.post
     let image = request.payload.image
@@ -172,13 +143,16 @@ class PostsController extends Controller {
           if (request.payload.data.approved)
             delete request.payload.data.approved
           toBeUpdatedPost.set(request.payload.data)
+          toBeUpdatedPost.approved = false
         }
         if (image instanceof Buffer) {
           image = await upload('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           image = url('posts', toBeUpdatedPost._id + '.jpg', image, 'image/jpeg')
           toBeUpdatedPost.image = image
+          toBeUpdatedPost.approved = false
         } else if (image === '') {
           toBeUpdatedPost.image = image
+          toBeUpdatedPost.approved = false
         }
         toBeUpdatedPost = await toBeUpdatedPost.save()
       }
@@ -186,7 +160,6 @@ class PostsController extends Controller {
         toBeUpdatedPost.approved = approved
         await toBeUpdatedPost.save()
       }
-      // return { updated: true }
       return {toBeUpdatedPost}
     } catch (e) {
       console.log(e)
