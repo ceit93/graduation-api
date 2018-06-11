@@ -25,7 +25,8 @@
     "@bakjs/mongo": "^3.1.0",
     "@bakjs/policy": "^2.1.0",
     "bak": "^4.0.1",
-    "config": "^1.30.0"
+    "config": "^1.30.0",
+    "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
     "nodemon": "^1.17.2"
