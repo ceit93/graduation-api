@@ -10,6 +10,7 @@ class PollsController extends Controller {
     this.get('/polls', this.getSavedPollsByUser)
     this.get('/polls/results', this.getAllVoteResults)
     this.get('/polls/tarins', this.getTarins)
+    this.get('/polls/{username}', this.getTopTarinsByUser)
   }
 
 
@@ -115,6 +116,67 @@ class PollsController extends Controller {
       }
     } else {
       return Boom.unauthorized()
+    }
+  }
+
+  async getTopTarinsByUser(request, h){
+    let username = request.params.username
+    let results = []
+    try{
+      let targetUser = await User.findOne({username:username})
+      let users = await User.find()
+
+      let voteResults = []
+      for (let user of users) {
+        for (let vote of user.votes) {
+          if (vote.candidate) {
+            if (targetUser._id.equals(vote.candidate)) {
+              voteResults.push(vote.qualification._id)
+            }
+          }
+        }
+      }
+      let voteCounts = []
+      let count
+      for(let userVote of voteResults) {
+        count = voteResults.filter(
+          function (id) {
+            return id === userVote
+          }
+        ).length
+        let voteCount = {}
+        voteCount.id = userVote
+        voteCount.count = count
+        if (
+          (voteCounts.filter(
+            function (e) {
+              return e.id === userVote
+            }
+          ).length) === 0
+        ) {
+          voteCounts.push(voteCount)
+        }
+      }
+
+      let sorted = voteCounts.sort(function IHaveAName(a, b) {
+        return b.count > a.count ?  1
+          : b.count < a.count ? -1
+            : 0;
+      });
+
+      for(let i=0; i<3; i++){
+        let result = {}
+        let qual = await Qualification.findById(sorted[i].id)
+        result.name = qual.title
+        result.count = sorted[i].count
+        results.push(result)
+      }
+
+
+      return results
+    } catch (e){
+      console.log(e)
+      throw Boom.badRequest()
     }
   }
 
