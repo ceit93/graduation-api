@@ -6,7 +6,8 @@ const Boom = require('boom')
 
 class InterviewsController extends Controller {
   init() {
-    this.post('/questions', this.createQuestion, {
+    this.post('/questions', this.createQuestion)
+    this.get('/questions', this.getQuestions, {
       auth: {mode: 'try'}
     })
     this.post('/interviews/{question}/submit', this.submitInterviews)

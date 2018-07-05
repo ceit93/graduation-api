@@ -24,7 +24,7 @@ class NotificationsController extends Controller {
     let notification
 
     try {
-      notifications = new Notification(request.payload)
+      notification = new Notification(request.payload)
       await notification.save()
       return notification
     } catch (e) {
