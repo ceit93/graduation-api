@@ -6,9 +6,13 @@ const Boom = require('boom')
 class UsersController extends Controller {
   init() {
     this.post('/profie', this.updateProfile)
-    this.get('/users/students', this.getAll93Students)
+    this.get('/users/students', this.getAll93Students, {
+      auth: {mode: 'try'}
+    })
     this.get('/users', this.getAllUsers)
-    this.get('/users/{username}', this.getByUsername)
+    this.get('/users/{username}', this.getByUsername, {
+      auth: {mode: 'try'}
+    })
   }
 
   async getAll93Students (request, h){
@@ -30,7 +34,11 @@ class UsersController extends Controller {
     user = user.toObject()
     let toBeDisplayedPosts = []
 
-    if (user._id.equals(request.user._id)) {
+    for(let index in user.interviews){
+      user.interviews[index].question = await Question.findById(user.interviews[index].question)
+    }
+
+    if (request.user && user._id.equals(request.user._id)) {
       for (let post in user.posts) {
         let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name')
         user.posts[post].user = author.toObject()
@@ -38,7 +46,7 @@ class UsersController extends Controller {
       }
     } else {
       for (let post in user.posts) {
-        if (user.posts[post].user.equals(request.user._id) || user.posts[post].approved) {
+        if ((request.user && user.posts[post].user.equals(request.user._id)) || user.posts[post].approved) {
           let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name')
           user.posts[post].user = author.toObject()
           toBeDisplayedPosts.push(user.posts[post])
