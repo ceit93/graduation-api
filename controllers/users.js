@@ -1,6 +1,7 @@
 const { Controller } = require('bak')
 const { upload, url } = require('@bakjs/minio')
 const { User } = require('../models')
+const { Question } = require('../models')
 const Boom = require('boom')
 
 class UsersController extends Controller {
@@ -28,7 +29,7 @@ class UsersController extends Controller {
 
 
   async getByUsername (request, h) {
-    let user = await User.findOne({ username: request.params.username }).populate('posts')
+    let user = await User.findOne({ username: request.params.username }).populate('posts').populate('interviews')
     // request.authorize('can_request_wall', user)
     user.votes = undefined
     user = user.toObject()
