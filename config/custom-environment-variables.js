@@ -43,7 +43,8 @@ module.exports = {
   },
 
   zarinpal: {
-    merchant_id: 'ZARINPAL_ID'
+    merchant_id: 'ZARINPAL_ID',
+    base_url: 'ZARINPAL_BASEURL'
   }
 
 }

@@ -5,7 +5,7 @@ const Config = require('config');
 
 const ZarinpalCheckout = require('zarinpal-checkout');
 const zarinpal = ZarinpalCheckout.create(Config.get('zarinpal.merchant_id'), false);
-const baseUrl = 'http://localhost:4000'
+const baseUrl = Config.get('zarinpal.base_url')
 
 
 class PaymentController extends Controller {
@@ -145,9 +145,9 @@ class PaymentController extends Controller {
    */
   isPayedCorrect(registration) {
     if (registration.selfPayed)
-      return registration.cost === (registration.family * 30)
+      return registration.cost === (registration.family * 30) + 15;
     else
-      return registration.cost === (registration.family + 1) * 30
+      return registration.cost === (registration.family) * 30 + 45;
   }
 
   /**
