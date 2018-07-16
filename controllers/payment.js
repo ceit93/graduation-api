@@ -5,7 +5,7 @@ const Config = require('config');
 
 const ZarinpalCheckout = require('zarinpal-checkout');
 const zarinpal = ZarinpalCheckout.create(Config.get('zarinpal.merchant_id'), false);
-const baseUrl = 'https://ceit93.ir/'
+const baseUrl = Config.get('zarinpal.base_url')
 
 
 class PaymentController extends Controller {
