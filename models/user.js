@@ -14,7 +14,7 @@ const registerSchema = new Schema({
 
 class User extends Auth.User {
   static get $visible() {
-    return ['_id', 'name', 'email', 'username', 'posts', 'votes', 'std_numbers','avatar', 'gender', 'authorized', 'interviews', 'is_admin', 'modified_name']
+    return ['_id', 'name', 'email', 'username', 'posts', 'votes', 'std_numbers','avatar', 'gender', 'authorized', 'interviews', 'is_admin', 'modified_name','addFamily']
   }
 
   static get $schema() {
@@ -28,7 +28,8 @@ class User extends Auth.User {
       locked: Boolean,
       gender: String,
       authorized: Boolean,
-      modified: String
+      modified: String,
+      addFamily: [],
     })
   }
 }
