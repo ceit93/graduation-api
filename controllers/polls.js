@@ -164,7 +164,7 @@ class PollsController extends Controller {
             : 0;
       });
 
-      for(let i=0; i<3; i++){
+      for(let i=0; i<7; i++){
         let result = {}
         let qual = await Qualification.findById(sorted[i].id)
         result.name = qual.title

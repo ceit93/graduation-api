@@ -26,6 +26,8 @@ class UsersController extends Controller {
 
 
   async getByUsername (request, h) {
+
+
     let user = await User.findOne({ username: request.params.username }).populate('posts').populate('interviews')
     // request.authorize('can_request_wall', user)
     user.votes = undefined
@@ -56,17 +58,32 @@ class UsersController extends Controller {
     user.posts = toBeDisplayedPosts
 
 
+    let forbiddenTarins = [
+      '5b13d5675f6c8430dc25a0fb',
+      '5b178dcdcc274c001a094c5f',
+      '5b1932930f1bff001a201d74',
+      '5b1e34b8ed40a9001aa33793',
+      '5b13d4f55f6c8430dc25a0ee',
+      '5b13d4045f6c8430dc25a0d7',
+      '5b13d1d25f6c8430dc25a0ab',
+      '5b13d25a5f6c8430dc25a0b9',
+      '5b13d2bf5f6c8430dc25a0c5',
+    ];
+
+
+
     let username = user.username
     let results = []
       let targetUser = await User.findOne({username:username})
       let users = await User.find()
-
       let voteResults = []
       for (let user of users) {
         for (let vote of user.votes) {
           if (vote.candidate) {
             if (targetUser._id.equals(vote.candidate)) {
-              voteResults.push(vote.qualification._id)
+              if(!forbiddenTarins.includes(vote.qualification._id)) {
+                voteResults.push(vote.qualification._id)
+              }
             }
           }
         }
