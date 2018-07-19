@@ -3,6 +3,7 @@ const { upload, url } = require('@bakjs/minio')
 const { User } = require('../models')
 const { Question } = require('../models')
 const { Qualification } = require('../models')
+const { TopTarin } = require('../models')
 const Boom = require('boom')
 
 class UsersController extends Controller {
@@ -62,79 +63,15 @@ class UsersController extends Controller {
     user.posts = toBeDisplayedPosts
 
 
-    let forbiddenTarins = [
-      '5b13d5675f6c8430dc25a0fb',
-      '5b178dcdcc274c001a094c5f',
-      '5b1932930f1bff001a201d74',
-      '5b1e34b8ed40a9001aa33793',
-      '5b13d4f55f6c8430dc25a0ee',
-      '5b13d4045f6c8430dc25a0d7',
-      '5b13d1d25f6c8430dc25a0ab',
-      '5b13d25a5f6c8430dc25a0b9',
-      '5b13d2bf5f6c8430dc25a0c5',
-    ];
-
-
-
     let username = user.username
-    let results = []
-      let targetUser = await User.findOne({username:username})
-      let users = await User.find()
-      let voteResults = []
-      for (let user of users) {
-        for (let vote of user.votes) {
-          if (vote.candidate) {
-            if (targetUser._id.equals(vote.candidate)) {
-              if(!forbiddenTarins.includes(vote.qualification._id)) {
-                voteResults.push(vote.qualification._id)
-              }
-            }
-          }
-        }
-      }
-      let voteCounts = []
-      let count
-      for(let userVote of voteResults) {
-        count = voteResults.filter(
-          function (id) {
-            return id === userVote
-          }
-        ).length
-        let voteCount = {}
-        voteCount.id = userVote
-        voteCount.count = count
-        if (
-          (voteCounts.filter(
-            function (e) {
-              return e.id === userVote
-            }
-          ).length) === 0
-        ) {
-          voteCounts.push(voteCount)
-        }
-      }
-
-      let sorted = voteCounts.sort(function func(a, b) {
-        return b.count > a.count ?  1
-          : b.count < a.count ? -1
-            : 0;
-      });
-
-      for(let i=0; i<5; i++){
-        let result = {}
-        if(sorted.length > i) {
-          let qual = await Qualification.findById(sorted[i].id)
-          let underlined_title = qual.title.replace(new RegExp(' ', 'g'), "_")
-          result.name = underlined_title
-          results.push(result)
-        }
-      }
-
-      user.topTarins = results
+    let targetUser = await User.findOne({username:username})
+    let topTarinsObject = await TopTarin.findOne({user: targetUser})
+    user.topTarins = topTarinsObject.topTarins
 
 
     return {user}
   }
+
 
   async updateProfile(request, h) {
     let user = request.user._id
