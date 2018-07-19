@@ -22,6 +22,7 @@ class User extends Auth.User {
       posts: [{type: Schema.Types.ObjectId, ref: 'Post'}],
       avatar: String,
       votes: [],
+      topTarins: [],
       registration: registerSchema,
       modified_name: String,
       interviews: [{type: Schema.Types.ObjectId, ref: 'Interview'}],

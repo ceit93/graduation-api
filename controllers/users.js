@@ -2,6 +2,8 @@ const { Controller } = require('bak')
 const { upload, url } = require('@bakjs/minio')
 const { User } = require('../models')
 const { Question } = require('../models')
+const { Qualification } = require('../models')
+const { TopTarin } = require('../models')
 const Boom = require('boom')
 
 class UsersController extends Controller {
@@ -29,6 +31,8 @@ class UsersController extends Controller {
 
 
   async getByUsername (request, h) {
+
+
     let user = await User.findOne({ username: request.params.username }).populate('posts').populate('interviews')
     // request.authorize('can_request_wall', user)
     user.votes = undefined
@@ -58,8 +62,16 @@ class UsersController extends Controller {
     user.posts = undefined
     user.posts = toBeDisplayedPosts
 
-    return { user }
+
+    let username = user.username
+    let targetUser = await User.findOne({username:username})
+    let topTarinsObject = await TopTarin.findOne({user: targetUser})
+    user.topTarins = topTarinsObject.topTarins
+
+
+    return {user}
   }
+
 
   async updateProfile(request, h) {
     let user = request.user._id

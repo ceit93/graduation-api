@@ -5,6 +5,7 @@ const Vote = require('./vote')
 const Notification = require('./notification')
 const Question = require('./question')
 const Interview = require('./interview')
+const TopTarin = require('./topTarin')
 module.exports = {
   User,
   Post,
@@ -12,5 +13,6 @@ module.exports = {
   Vote,
   Notification,
   Question,
-  Interview
+  Interview,
+  TopTarin
 }
