@@ -21,7 +21,7 @@ class UsersController extends Controller {
   async getAll93Students (request, h){
     try{
       let users = await User.find({ $or: [{ std_numbers: { $regex: /^9331[0-9]{3}$/ } }, { authorized: true }] })
-        .select('_id name username std_numbers avatar gender modified_name')
+        .select('_id name username std_numbers avatar gender modified_name grad_photo')
       return users
     } catch (e) {
       console.log(e)
@@ -45,14 +45,14 @@ class UsersController extends Controller {
 
     if (request.user && user._id.equals(request.user._id)) {
       for (let post in user.posts) {
-        let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name')
+        let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name grad_photo')
         user.posts[post].user = author.toObject()
         toBeDisplayedPosts.push(user.posts[post])
       }
     } else {
       for (let post in user.posts) {
         if ((request.user && user.posts[post].user.equals(request.user._id)) || user.posts[post].approved) {
-          let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name')
+          let author = await User.findById(user.posts[post].user).select('_id name username std_numbers avatar gender modified_name grad_photo')
           user.posts[post].user = author.toObject()
           toBeDisplayedPosts.push(user.posts[post])
         }
