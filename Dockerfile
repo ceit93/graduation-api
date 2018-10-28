@@ -6,7 +6,7 @@ EXPOSE 3000
 # Copies dependencies in seperate layers
 COPY package.json yarn.lock /usr/src/app/
 
-RUN NODE_ENV=production
+RUN NODE_ENV=development
 
 RUN yarn install --frozen-lockfile
 
