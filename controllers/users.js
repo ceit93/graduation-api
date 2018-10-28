@@ -5,6 +5,7 @@ const { Question } = require('../models')
 const { Qualification } = require('../models')
 const { TopTarin } = require('../models')
 const Boom = require('boom')
+const Config = require('config')
 
 class UsersController extends Controller {
   init() {
@@ -19,6 +20,7 @@ class UsersController extends Controller {
   }
 
   async getAll93Students (request, h){
+    console.log(Config.get('mongo.connections.default.uri'))
     try{
       let users = await User.find({ $or: [{ std_numbers: { $regex: /^9331[0-9]{3}$/ } }, { authorized: true }] })
         .select('_id name username std_numbers avatar gender modified_name grad_photo')
