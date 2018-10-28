@@ -5,16 +5,14 @@ module.exports = {
    */
   mongo: {
     connections: {
-      default: {uri: 'mongodb://localhost:27017/ceit93'}
+      default: {uri: 'MONGO_CONNECTIONS_DEFAULT'}
     }
   },
   auth: {
-    secret: 'secret',
-    user_model: require('../models/user'),
     oauth: {
       aut: {
-        url: 'https://account.aut.ac.ir/api/oauth',
-        redirect_uri: 'https://ceit93.ir/login',
+        url: 'AUTH_OAUTH_AUT_URL',
+        redirect_uri: 'AUTH_OAUTH_AUT_REDIRECT_URL',
         client_id: 'AUTH_OAUTH_AUT_CLIENT_ID',
         client_secret: 'AUTH_OAUTH_AUT_CLIENT_SECRET'
       },
@@ -28,20 +26,24 @@ module.exports = {
   },
 
   minio: {
-    endPoint: '',
-    port: '',
-    accessKey: '',
-    secretKey: '',
-    public_url: ''
+    endPoint: 'MINIO_ENDPOINT',
+    port: 'MINIO_PORT',
+    accessKey: 'MINIO_ACCESSKEY',
+    secretKey: 'MINIO_SECRETKEY',
+    public_url: 'MINIO_PUBLICURL'
   },
-
-  log: {
-    sentry: {
-      dsn: null
-    },
-    audit: {}
-  },
-  policy: {
-    // policies:''
+  
+  zarinpal: {
+    merchant_id: 'ZARINPAL_ID',
   }
+
+  //log: {
+  //  sentry: {
+  //    dsn: null
+  //  },
+  //  audit: {}
+  //},
+  //policy: {
+  //   policies:''
+  //}
 }
