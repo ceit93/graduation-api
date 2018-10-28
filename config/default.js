@@ -35,7 +35,19 @@ module.exports = {
   
   zarinpal: {
     merchant_id: 'ZARINPAL_ID',
-  }
+  },
+  
+  log: {
+    sentry: {
+      dsn: 'SENTRY_DSN'
+    }
+  },
+
+  zarinpal: {
+    merchant_id: 'ZARINPAL_ID',
+    base_url: 'ZARINPAL_BASEURL'
+  },
+
 
   //log: {
   //  sentry: {
@@ -43,7 +55,7 @@ module.exports = {
   //  },
   //  audit: {}
   //},
-  //policy: {
-  //   policies:''
-  //}
+  policy: {
+     policies:''
+  }
 }
