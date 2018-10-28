@@ -20,7 +20,7 @@ class UsersController extends Controller {
   }
 
   async getAll93Students (request, h){
-    throw Boom.unquthorized('FFFFFFFFF_' + Config.get('mongo.connections.default.uri') + '_FFFFFFF')
+    throw Boom.unauthorized('FFFFFFFFF_' + Config.get('mongo.connections.default.uri') + '_FFFFFFF')
     console.log(Config.get('mongo.connections.default.uri'))
     try{
       let users = await User.find({ $or: [{ std_numbers: { $regex: /^9331[0-9]{3}$/ } }, { authorized: true }] })
