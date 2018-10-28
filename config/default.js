@@ -9,6 +9,7 @@ module.exports = {
     }
   },
   auth: {
+    secret: 'AUTH_SECRET',
     oauth: {
       aut: {
         url: 'AUTH_OAUTH_AUT_URL',
