@@ -12,4 +12,4 @@ RUN yarn install --frozen-lockfile
 
 ADD . /usr/src/app
 
-#CMD yarn start
+CMD yarn dev
